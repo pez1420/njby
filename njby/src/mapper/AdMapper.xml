@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.AdDao">
+	
+	<sql id="Table_Name">
+		ad
+	</sql>
+
+  	<resultMap id="BaseAdMap" type="Ad" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="orders" property="orders" jdbcType="INTEGER" />
+	    <result column="begin_date" property="beginDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="path" property="path" jdbcType="VARCHAR" />
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="ad_type" property="adType" jdbcType="INTEGER" />
+	    <result column="url" property="url" jdbcType="VARCHAR" />
+	    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+	    <association column="ad_position_id" property="adPosition"  javaType="AdPosition"  
+	    	resultMap="BaseAdPositionMap" columnPrefix="position_"/>
+  	</resultMap>
+  
+  	<resultMap id="BaseAdPositionMap" type="AdPosition">
+	    <id property="id" jdbcType="VARCHAR"  column="id"/>
+	    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="width" column="width" jdbcType="INTEGER" />
+	    <result property="height" column="height" jdbcType="INTEGER" />
+	    <result property="name" column="name"  jdbcType="VARCHAR"  />
+    	<result property="template" column="template"  jdbcType="LONGVARCHAR" />
+    	<result property="description" column="description" jdbcType="VARCHAR"/>
+	</resultMap>
+
+
+  <insert id="save" parameterType="Ad" >
+  	<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+	</selectKey>
+		
+    insert into <include refid="Table_Name" /> 
+    	(
+    		id, create_date, modify_date, 
+      		orders, begin_date, end_date, 
+      		path, title, ad_type, 
+      		url, ad_position_id, content
+      	)
+    values (#{id,jdbcType=VARCHAR}, 
+    		now(),
+    		now(), 
+    		<if test="orders != null" >
+        		#{orders,jdbcType=INTEGER}, 
+      		</if>
+    		<if test="orders == null" >
+        		null, 
+      		</if>   
+      		
+    		<if test="beginDate != null" >
+        		#{beginDate,jdbcType=TIMESTAMP}, 
+      		</if>
+    		<if test="beginDate == null" >
+        		null, 
+      		</if> 
+      		
+    		<if test="endDate != null" >
+        		#{endDate,jdbcType=TIMESTAMP}, 
+      		</if>
+    		<if test="endDate == null" >
+        		null, 
+      		</if> 
+
+    		<if test="path != null" >
+        		#{path,jdbcType=VARCHAR}, 
+      		</if>
+    		<if test="path == null" >
+        		null, 
+      		</if> 
+      		      		      		   		
+      		#{title,jdbcType=VARCHAR}, 
+      		#{adType,jdbcType=INTEGER}, 
+      		#{url,jdbcType=VARCHAR}, 
+      		#{adPosition.id,jdbcType=VARCHAR}, 
+      		#{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  
+  	
+	<select id="findPage" resultMap="BaseAdMap" parameterType="map">
+		select 
+			A.id 			as   id,
+			A.create_date   as   create_date,
+			A.modify_date 	as   modify_date,
+			A.orders   		as   orders,
+			A.begin_date    as   begin_date,
+			A.end_date      as   end_date,
+			A.path      	as   path,			
+			A.title      	as   title,	
+			A.ad_type      	as   ad_type,	
+			A.url      		as   url,	
+			A.content      	as   content,	
+			B.id     		as   position_id,
+			B.name          as   position_name	
+		from <include refid="Table_Name" /> A left outer join ad_position B on A.ad_position_id = B.id
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.title != null and search.title != ''">  
+            	title like  "%"#{search.title}"%"
+       	 	</if>  
+		</trim>
+	</select>	
+	
+		
+</mapper>

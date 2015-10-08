@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njby.dao.ProductDao" >
+
+	<resultMap id="BaseProductMap" type="Product" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="sn" property="sn" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="price" property="price" jdbcType="VARCHAR" />
+	    <result column="introduction" property="introduction" jdbcType="VARCHAR" />
+	    <result column="is_marketable" property="isMarketable" jdbcType="BIT" />
+	    <result column="stock" property="stock" jdbcType="INTEGER" />
+	    <result column="keyword" property="keyword" jdbcType="VARCHAR" />
+	    <result column="seo_title" property="seoTitle" jdbcType="VARCHAR" />
+	    <result column="seo_keywords" property="seoKeywords" jdbcType="VARCHAR" />
+	    <result column="seo_description" property="seoDescription" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="image" property="image" jdbcType="VARCHAR" />
+	    <association column="product_type_id" property="productType"  
+	    		javaType="ProductType"  resultMap="ProductTypeMap" columnPrefix="type_"/>
+	  </resultMap>
+	  
+	<!-- 基本产品类型map -->
+	<resultMap id="ProductTypeMap" type="ProductType" >
+	    <id property="id" column="id" jdbcType="VARCHAR" />
+	    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="grade" column="grade" jdbcType="INTEGER" />
+		<result property="orders" column="orders" jdbcType="INTEGER" />
+		<result property="treePath" column="tree_path" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<sql id="Table_Name">
+		product
+	</sql>
+
+
+	<!--  根据主键返回记录 -->
+	<select id="find" resultMap="BaseProductMap" parameterType="java.lang.String">
+		select 
+		        A.id          		as id, 
+				A.create_date 		as create_date, 
+				A.create_date 		as create_date, 
+				A.sn             	as sn, 
+				A.name          	as name, 
+				A.price        		as price,
+				A.introduction  	as introduction,
+				A.is_marketable     as is_marketable,
+				A.stock             as stock,
+				A.keyword           as keyword,
+				A.seo_title         as seo_title,
+				A.seo_keywords      as seo_keywords,
+				A.seo_description   as seo_description,
+				A.remark            as remark,
+				A.image             as image,
+				
+				B.id                as type_id,
+				B.name              as type_name,
+				B.create_date       as type_create_date,
+				B.modify_date       as type_modify_date
+
+		from <include refid="Table_Name" /> A left outer join product_type B on A.product_type_id = B.id
+		where A.id = #{id,jdbcType=VARCHAR}
+	</select>
+	
+  	<insert id="save" parameterType="Product" >
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+	    insert into <include refid="Table_Name" /> (id, create_date, modify_date, 
+	      sn, name, price, introduction, 
+	      is_marketable, stock, keyword, 
+	      seo_title, seo_keywords, seo_description, 
+	      remark, image, product_type_id)
+	    values (#{id,jdbcType=VARCHAR}, now(),now(),<!-- #{createDate,jdbcType=TIMESTAMP}, #{modifyDate,jdbcType=TIMESTAMP}, --> 
+	      #{sn,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, 
+	      <if test="introduction != null">
+	      	#{introduction,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="introduction == null">
+	      	null,
+	      </if>
+
+	      <if test="isMarketable != null">
+	      	#{isMarketable,jdbcType=BIT}, 
+	      </if>
+	      <if test="isMarketable == null">
+	      	0,
+	      </if>
+	      
+	      <if test="stock != null">
+	      	#{stock,jdbcType=INTEGER}, 
+	      </if>
+	      <if test="stock == null">
+	      	0,
+	      </if>	   
+	         
+	      <if test="keyword != null">
+	      	#{keyword,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="keyword == null">
+	      	null,
+	      </if>
+	      
+	      <if test="seoTitle != null">
+	      	#{keyword,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="seoTitle == null">
+	      	null,
+	      </if>	  
+
+	      <if test="seoKeywords != null">
+	      	#{seoKeywords,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="seoKeywords == null">
+	      	null,
+	      </if>	 
+	      	          	         
+	      <if test="seoDescription != null">
+	      	#{seoDescription,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="seoDescription == null">
+	      	null,
+	      </if>		      	          	         
+	      	          	         
+	      <if test="remark != null">
+	      	#{remark,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="remark == null">
+	      	null,
+	      </if>	  
+	      
+	      <if test="image != null">
+	      	#{image,jdbcType=VARCHAR}, 
+	      </if>
+	      <if test="image == null">
+	      	null,
+	      </if>	
+	       
+	      #{productType.id,jdbcType=VARCHAR}
+	      )
+  	</insert>
+
+  <update id="update" parameterType="Product">
+    update <include refid="Table_Name" />
+    set 
+      modify_date = now(),
+      sn = #{sn,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=VARCHAR},
+      introduction = #{introduction,jdbcType=VARCHAR},
+      is_marketable = #{isMarketable,jdbcType=BIT},
+      stock = #{stock,jdbcType=INTEGER},
+      <if test="keyword != null">
+        keyword = #{keyword,jdbcType=VARCHAR},
+      </if>
+      <if test="seoTitle != null">
+        seo_title = #{seoTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="seoKeywords != null">
+        seo_keywords = #{seoKeywords,jdbcType=VARCHAR},
+      </if>
+      <if test="seoDescription != null">
+        seo_description = #{seoDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      image = #{image,jdbcType=VARCHAR},
+      product_type_id = #{productTypeId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    	  
+	<!--  分页查询  -->
+	<select id="findPage" resultMap="BaseProductMap" parameterType="map">
+		select 
+			A.id 				as   id,
+			A.create_date  		as   create_date,
+			A.modify_date   	as   modify_date,
+			A.sn            	as   sn,
+			A.name          	as   name,
+			A.price         	as   price,
+			A.introduction  	as   introduction,
+			A.is_marketable 	as   is_marketable,
+			A.stock  			as   stock,
+			A.keyword  			as   keyword,
+			A.seo_title  		as   seo_title,
+			A.seo_keywords  	as   seo_keywords,
+			A.seo_description  	as   seo_description,
+			A.remark  			as   remark,
+			A.image             as   image,
+			B.id                as   type_id,
+			B.create_date       as   type_create_date,
+			B.modify_date       as   type_modify_date,
+			B.name              as   type_name,
+			B.grade             as   type_grade,
+			B.tree_path         as   type_tree_path
+		from <include refid="Table_Name" /> A left outer join product_type B on A.product_type_id = B.id
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.name != null and search.name != ''">  
+            	A.name like  "%"#{search.name}"%"
+       	 	</if>  
+       	 	<if test="search.productTypeId != null and search.productTypeId != ''">  
+            	A.product_type_id = #{search.productTypeId}
+       	 	</if>  
+		</trim>
+	</select>
+
+
+	<select id="findList" resultMap="BaseProductMap" parameterType="int">
+		select *
+		from <include refid="Table_Name" />
+		order by create_date desc
+		limit 0, #{count, jdbcType=INTEGER}
+	</select>
+
+</mapper>

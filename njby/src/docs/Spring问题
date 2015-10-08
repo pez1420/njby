@@ -1,0 +1,24 @@
+Spring MVC Controller中解析GET方式的中文参数会乱码的问题
+
+http://www.cnblogs.com/liukemng/p/4178882.html
+http://www.bubuko.com/infodetail-674835.html
+
+在工作上使用Spring老是碰到一个问题，使用Controller处理GET方式的请求参数时，服务端得到的结果会碰到乱码，之前翻阅了很多与Java EE相关的很多乱码处理资料，不管是加过滤器还是统一文件编码，都没能正确解决，后来设计接口时，一直采用先Base64，然后再作为参数传过来的方式解决的。最近找到了根本的解决方案，顺手记下来。
+
+为何会乱码
+
+Spring MVC 是基于Servlet，在Http请求到达Servlet解析之前，GET过来的URL已经被Tomcat先做了一次URLDecode。Tomcat对GET方式默认的URL解码结果是iso-8859-1而不是我认为的UTF-8（很奇怪为啥会这么干，开源项目不都是喜欢默认UTF-8的么）。
+
+解决方案
+
+解决方案也很简单，除了平常在项目中web.xml里配置的转码filter，jsp跟代码文件统一编码外，最关键的一点就是在Tomcat的conf目录下的server.xml中配置 Connector的URIEconding=“UTF-8"属性即可。 
+官方文档中对这个属性的说明：
+
+URIEncoding ：This specifies the character encoding used to decode the URI bytes, after %xx decoding the URL. If not specified, ISO-8859-1 will be used.
+
+这里参考文档是Tomcat5.5的，亲测对Tomcat7也管用。
+
+参考
+
+Tomcat官网文档：http://tomcat.apache.org/tomcat-5.5-doc/config/http.html
+CSDN上的一篇博文：http://blog.csdn.net/chenyongsuda/article/details/5393458

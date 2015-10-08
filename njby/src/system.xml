@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+
+	<setting name="siteName" value="南京碧源企业管理系统" />
+	<setting name="siteUrl" value="http://localhost" />
+	<setting name="logo" value="/upload/image/logo.gif" />
+	
+	<setting name="uploadMaxSize" value="10" />
+	<setting name="uploadImageExtension" value="jpg,jpeg,bmp,gif,png" />
+	<setting name="imageUploadPath" value="/upload/image/${.now?string('yyyyMM')}/" />
+	
+	
+	<logConfig operation="系统设置" urlPattern="/admin/setting/update.jhtml" />
+	<logConfig operation="添加管理员" urlPattern="/admin/admin/save.jhtml" />
+	<logConfig operation="编辑管理员" urlPattern="/admin/admin/update.jhtml" />
+	<logConfig operation="删除管理员" urlPattern="/admin/admin/delete.jhtml" />
+	
+	<template id="index" type="0" name="首页" templatePath="/forward/index.ftl" staticPath="/index.html" />
+	<template id="aboutus" type="0" name="关于我们" templatePath="/forward/aboutus/aboutus.ftl" staticPath="/aboutus.html" />
+	
+</system>

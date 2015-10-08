@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	 <settings>
+	 	<!-- 全局映射器启用缓存 -->  
+        <setting name="cacheEnabled" value="true"/>  
+	 	<!-- 全局启用或禁用延迟加载。当禁用时，所有关联对象都会即时加载。默认：true -->
+	 	<setting name="lazyLoadingEnabled" value="true"/>
+	 	<!-- 当启用时，有延迟加载属性的对象在被调用时将会完全加载任意属性。否则，每种属性将会按需要加载 -->
+	 	<setting name="aggressiveLazyLoading" value="false"/>
+	 </settings>
+
+    <!-- 命名空间 -->
+    <typeAliases>
+         <typeAlias alias="Admin" type="com.njby.entity.Admin"/>
+         <typeAlias alias="Role" type="com.njby.entity.Role"/>
+         <typeAlias alias="Product" type="com.njby.entity.Product"/>
+         <typeAlias alias="ProductType" type="com.njby.entity.ProductType"/>
+         <typeAlias alias="Catalog" type="com.njby.entity.Catalog"/>
+         <typeAlias alias="Log" type="com.njby.entity.Log"/>
+         <typeAlias alias="Navigation" type="com.njby.entity.Navigation"/>
+         <typeAlias alias="Ad" type="com.njby.entity.Ad"/>
+         <typeAlias alias="AdPosition" type="com.njby.entity.AdPosition"/>
+         <typeAlias alias="Notice" type="com.njby.entity.Notice"/>
+         <typeAlias alias="LeaveMessage" type="com.njby.entity.LeaveMessage"/>
+         <typeAlias alias="AdminRoleLink" type="com.njby.entity.AdminRoleLink"/>
+         <typeAlias alias="RoleAuthority" type="com.njby.entity.RoleAuthority"/>
+         <typeAlias alias="Culture" type="com.njby.entity.Culture"/>
+         <typeAlias alias="Firm" type="com.njby.entity.Firm"/>
+         
+         <typeAlias alias="Pageable" type="com.njby.utils.Pageable"/>
+    </typeAliases>
+
+	<!-- 分页插件 -->
+	<plugins>
+		<plugin interceptor="com.njby.interceptor.PaginationInterceptor">
+			<property name="databaseType" value="mysql"/>
+			<!-- 正则表达式只拦截以Page为结尾的查询方法 -->
+			<property name="pagePattern" value=".*Page$"/>
+		</plugin>
+	</plugins> 
+     
+    <!-- 映射map -->
+    <mappers>
+    </mappers>
+</configuration>

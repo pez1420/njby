@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njby.dao.LogDao" >
+
+	<sql id="Table_Name">
+		log
+	</sql>
+
+  	<resultMap id="BaseLogMap" type="Log" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="ip" property="ip" jdbcType="VARCHAR" />
+	    <result column="operation" property="operation" jdbcType="VARCHAR" />
+	    <result column="operator" property="operator" jdbcType="VARCHAR" />
+	   	<result column="content" property="content" jdbcType="LONGVARCHAR" />
+    	<result column="parameter" property="parameter" jdbcType="LONGVARCHAR" />
+  	</resultMap>
+
+	<select id="findPage" resultMap="BaseLogMap" parameterType="map">
+		select *	
+		from <include refid="Table_Name" /> 
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.operation != null and search.operation != ''">  
+            	operation like  "%"#{search.operation}"%"
+       	 	</if>  
+		</trim>
+		order by create_date desc
+	</select>	
+	  	
+ 	<!-- 增加一条Log记录 --> 	
+	<insert id="save" parameterType="Log">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+	    insert into <include refid="Table_Name" /> (
+	       id, create_date, modify_date, 
+	       content, ip, operation, 
+      	   operator, parameter
+	      )
+	    values (#{id,jdbcType=VARCHAR}, now(), now(), 
+		       <if test="content != null">
+		      	#{content,jdbcType=VARCHAR},
+		      </if>
+		      <if test="content == null">
+		      	null,
+		      </if>
+
+		  	  <if test="ip != null">
+		      	#{ip,jdbcType=VARCHAR},
+		      </if>
+		      <if test="ip == null">
+		      	null,
+		      </if>
+		      
+		      <if test="operation != null">
+		      	#{operation,jdbcType=VARCHAR},
+		      </if>
+		      <if test="operation == null">
+		      	null,
+		      </if>
+		      
+		      <if test="operator != null">
+		      	#{operator,jdbcType=VARCHAR},
+		      </if>
+		      <if test="operator == null">
+		      	null,
+		      </if>	
+		      
+		      <if test="parameter != null">
+		      	#{parameter,jdbcType=VARCHAR}
+		      </if>
+		      <if test="parameter == null">
+		      	null
+		      </if>	
+		      	      
+	      )		
+	</insert> 	
+	
+	<select id="removeAll">
+		delete from <include refid="Table_Name" />
+	</select>
+	
+	
+</mapper>

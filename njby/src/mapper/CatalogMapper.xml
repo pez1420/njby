@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njby.dao.CatalogDao" >
+<!-- 	<resultMap id="CatalogMap" type="Catalog">
+	    <id property="id" column="catalog_id" jdbcType="VARCHAR" />
+	    <result property="createDate" column="catalog_create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="catalog_modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="name" column="catalog_name" jdbcType="VARCHAR" />
+		<result property="grade" column="catalog_grade" jdbcType="INTEGER" />
+		<result property="treePath" column="catalog_tree_path" jdbcType="VARCHAR" />
+	    <association property="parent" column="catalog_parent" javaType="Catalog"  resultMap="CatalogMap" /> 
+		<collection  property="childrens"  ofType="Catalog" resultMap="CatalogMap"/>
+	</resultMap>
+
+	<sql id="Table_Name">
+		catalog
+	</sql>
+
+	<sql id="Limit_Count">
+		limit 
+	</sql>
+			
+	<select id="findRoots" resultMap="CatalogMap" parameterType="int">
+		select 
+			id 			as  catalog_id,
+			create_date as  catalog_create_date,
+			modify_date  as  catalog_modify_date,
+			name 		as  catalog_name,
+			grade       as  catalog_grade,
+			tree_path   as  catalog_tree_path,
+			parent      as  catalog_parent
+		from <include refid="Table_Name" />
+		where parent is null
+		<if test="_parameter != 0"> 
+			<include refid="Limit_Count" /> #{_parameter,jdbcType=INTEGER}
+		</if>
+	</select> -->
+	
+	<sql id="Table_Name">
+		catalog
+	</sql>
+		
+	<resultMap id="CatalogMap" type="Catalog">
+	    <id property="id" column="id" jdbcType="VARCHAR" />
+	    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="grade" column="grade" jdbcType="INTEGER" />
+		<result property="treePath" column="tree_path" jdbcType="VARCHAR" />
+	    <association property="parent" column="parent" javaType="Catalog"  select="getparent" /> 
+		<collection  property="childrens"  column="id" select="getchildren"/>
+	</resultMap>	
+
+ 	
+ 	<select id="getparent" resultMap="CatalogMap" parameterType="String"  >
+ 		select *
+ 		from catalog       
+ 		where id =#{id,jdbcType=VARCHAR}  
+ 	 </select>
+ 	 
+ 	 <select id="getchildren" resultMap="CatalogMap" parameterType="String"  >         
+ 	 	select *
+ 	 	from catalog       
+ 	 	where parent =#{id,jdbcType=VARCHAR}  
+ 	 </select>
+ 	 
+ 	<select id="findRoots"  resultMap="CatalogMap" parameterType="int">
+ 		select * 
+ 		from catalog
+		where parent is null
+		<if test="_parameter != 0"> 
+			limit #{_parameter,jdbcType=INTEGER}
+		</if>
+ 	</select>
+ 	
+ 	<!-- 找到当前节点的所有父节点 -->
+ 	<select id="findParents"  resultMap="CatalogMap" parameterType="map">
+ 		select * 
+ 		from catalog
+		where id in
+		    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+		        #{item}
+		    </foreach>
+		<if test="count != 0"> 
+			limit #{count,jdbcType=INTEGER}
+		</if>
+ 	</select>
+ 	
+ 	<select id="findChildrens"  resultMap="CatalogMap" parameterType="map">
+ 		select * 
+ 		from catalog
+ 		<if test="parent != null"> 
+			where tree_path  like  "%,"#{parent.id}",%"
+		</if>
+		<if test="count != null and count != 0 "> 
+			limit #{count,jdbcType=INTEGER}
+		</if>
+ 	</select>
+ 	
+ 	<!--  根据主键返回记录 -->
+	<select id="find" resultMap="CatalogMap" parameterType="java.lang.String">
+		select  *
+		from <include refid="Table_Name" /> 
+		where id = #{id,jdbcType=VARCHAR}
+	</select>	
+		
+ 	<insert id="save" parameterType="Catalog">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+	    insert into <include refid="Table_Name" /> (
+	    	id, create_date, modify_date, 
+	        name, grade, tree_path, parent
+	      )
+	    values (#{id,jdbcType=VARCHAR}, now(), now(), 
+	     	  #{name,jdbcType=VARCHAR}, 
+	          <if test="grade != null">
+		      		#{grade,jdbcType=INTEGER},
+		      </if>
+		      <if test="grade == null">
+		      		0,
+		      </if>
+	         
+	          <if test="treePath != null">
+		      		#{treePath,jdbcType=VARCHAR},
+		      </if>
+		      <if test="treePath == null">
+		      		',',
+		      </if>		    
+		       
+		      <if test="parent != null">
+		      		#{parent.id,jdbcType=VARCHAR}
+		      </if>
+		      <if test="parent == null">
+		      		null
+		      </if>
+	      )		
+	</insert> 
+	
+ 	
+ 	 	
+</mapper>

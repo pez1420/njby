@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.ProductTypeDao" >
+	<sql id="Table_Name">
+		product_type
+	</sql>
+		
+	<resultMap id="ProductTypeMap" type="ProductType">
+	    <id property="id" column="id" jdbcType="VARCHAR" />
+	    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="name" column="name" jdbcType="VARCHAR" />
+		<result property="grade" column="grade" jdbcType="INTEGER" />
+		<result property="orders" column="orders" jdbcType="INTEGER" />
+		<result property="treePath" column="tree_path" jdbcType="VARCHAR" />
+		
+		<result property="seoTitle" column="seo_title" jdbcType="VARCHAR" />
+	    <result property="seoKeywords" column="seo_keywords" jdbcType="VARCHAR" />
+	    <result property="seoDescription" column="seo_description" jdbcType="VARCHAR" />
+		
+	    <association property="parent" column="parent" javaType="Catalog"  select="getparent" /> 
+		<collection  property="childrens"  column="id" select="getchildren"/>
+	</resultMap>	
+ 	
+ 	<select id="getparent" resultMap="ProductTypeMap" parameterType="String"  >
+ 		select *
+ 		from <include refid="Table_Name" />       
+ 		where id =#{id,jdbcType=VARCHAR}  
+ 	 </select>
+ 	 
+ 	 <select id="getchildren" resultMap="ProductTypeMap" parameterType="String"  >         
+ 	 	select *
+ 	 	from <include refid="Table_Name" />       
+ 	 	where parent = #{id,jdbcType=VARCHAR}  
+ 	 </select>
+ 	 
+ 	<select id="findRoots"  resultMap="ProductTypeMap" parameterType="int">
+ 		select * 
+ 		from <include refid="Table_Name" />
+		where parent is null
+		order by orders asc
+		<if test="_parameter != null and _parameter != 0"> 
+			limit #{_parameter,jdbcType=INTEGER}
+		</if>
+ 	</select>
+ 	
+ 	<!-- 找到当前节点的所有父节点 -->
+ 	<select id="findParents"  resultMap="ProductTypeMap" parameterType="map">
+ 		select * 
+ 		from <include refid="Table_Name" />
+		where id in
+		    <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
+		        #{item}
+		    </foreach>
+		    
+		order by orders asc
+		
+		<if test="count != 0"> 
+			limit #{count,jdbcType=INTEGER}
+		</if>
+ 	</select>
+ 	
+ 	<select id="findChildrens"  resultMap="ProductTypeMap" parameterType="map">
+ 		select * 
+ 		from <include refid="Table_Name" />
+ 		<if test="parent != null"> 
+			where tree_path  like  "%,"#{parent.id}",%"
+		</if>
+		
+		order by orders asc
+		
+		<if test="count != null and count != 0 "> 
+			limit #{count,jdbcType=INTEGER}
+		</if>
+ 	</select>
+ 	
+ 	<!--  根据主键返回记录 -->
+	<select id="find" resultMap="ProductTypeMap" parameterType="java.lang.String">
+		select  *
+		from <include refid="Table_Name" /> 
+		where id = #{id,jdbcType=VARCHAR}
+	</select>	
+		
+ 	<insert id="save" parameterType="ProductType">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+	    insert into <include refid="Table_Name" /> (
+	    	id, create_date, modify_date, 
+	        name, grade, orders, tree_path, 
+	        seo_title, seo_keywords, seo_description, parent
+	      )
+	    values (#{id,jdbcType=VARCHAR}, now(), now(), 
+	     	  #{name,jdbcType=VARCHAR}, 
+	          <if test="grade != null">
+		      		#{grade,jdbcType=INTEGER},
+		      </if>
+		      <if test="grade == null">
+		      		0,
+		      </if>
+	          
+	          <if test="orders != null">
+		      		#{orders,jdbcType=INTEGER},
+		      </if>
+		      <if test="orders == null">
+		      		null,
+		      </if>
+		      
+	          <if test="treePath != null">
+		      		#{treePath,jdbcType=VARCHAR},
+		      </if>
+		      <if test="treePath == null">
+		      		',',
+		      </if>		    
+
+		     <if test="seoTitle != null">
+		      	#{seoTitle,jdbcType=VARCHAR},
+		      </if> 
+		      <if test="seoTitle == null">
+		      	null,
+		      </if>
+		      
+		     <if test="seoKeywords != null">
+		      	#{seoKeywords,jdbcType=VARCHAR},
+		      </if> 
+		      <if test="seoKeywords == null">
+		      	null,
+		      </if>
+		      
+		     <if test="seoDescription != null">
+		      	#{seoDescription,jdbcType=VARCHAR},
+		      </if> 
+		      <if test="seoDescription == null">
+		      	null,
+		      </if>
+	      		       
+		      <if test="parent != null">
+		      		#{parent.id,jdbcType=VARCHAR}
+		      </if>
+		      <if test="parent == null">
+		      		null
+		      </if>
+	      )		
+	</insert> 
+	
+	<update id="update" parameterType="ProductType">
+	    update <include refid="Table_Name" />
+	    set 
+		      modify_date = now(),
+		      grade   = #{grade,jdbcType=INTEGER},
+		      orders  = #{orders,jdbcType=INTEGER},
+		      
+		      <if test="seoTitle != null and seoTitle !=''">
+		      seo_title  = #{seoTitle,jdbcType=VARCHAR},
+		      </if>
+		      <if test="seoKeywords != null and seoKeywords !=''">
+		      seo_keywords  = #{seoKeywords,jdbcType=VARCHAR},
+		      </if>
+		      <if test="seoDescription != null and seoDescription !=''">
+		      seo_description  = #{seoDescription,jdbcType=VARCHAR},
+		      </if>
+		      
+		      parent  = #{parent,jdbcType=VARCHAR}
+		      
+	     where id   = #{id,jdbcType=VARCHAR}	
+	</update>
+		
+</mapper>

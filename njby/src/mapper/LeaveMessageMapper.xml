@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njby.dao.LeaveMessageDao" >
+
+	<resultMap id="BaseLeaveMessageMap" type="LeaveMessage" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+	    <result column="phone" property="phone" jdbcType="VARCHAR" />
+	    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+	    <result column="reply" property="reply" jdbcType="LONGVARCHAR" />
+	    <result column="is_readed" property="isReaded" jdbcType="BIT" />
+	    <result column="is_replyed" property="isReplyed" jdbcType="BIT" />
+	    <result column="is_showed" property="isShowed" jdbcType="BIT" />
+	</resultMap>
+	
+	<sql id="Table_Name">
+		leave_message
+	</sql>
+	
+   <insert id="save" parameterType="LeaveMessage" >
+   		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+    	insert into leave_message (id, create_date, modify_date, 
+      		title, name, phone, 
+      		is_readed, is_replyed, is_showed, content, reply
+      	)
+    	values (
+    		#{id,jdbcType=VARCHAR}, 
+			now(), now(),
+      	   	#{title,jdbcType=VARCHAR}, 
+      	   	#{name,jdbcType=VARCHAR}, 
+      	   	#{phone,jdbcType=VARCHAR}, 
+		    <if test="isReaded != null">
+		      	#{isReaded,jdbcType=BIT},
+		    </if>
+		    <if test="isReaded == null">
+		      	0,
+		    </if>
+		    
+		    <if test="isReplyed != null">
+		      	#{isReplyed,jdbcType=BIT},
+		    </if>
+		    <if test="isReplyed == null">
+		      	0,
+		    </if>    
+
+		    <if test="isShowed != null">
+		      	#{isShowed,jdbcType=BIT},
+		    </if>
+		    <if test="isShowed == null">
+		      	0,
+		    </if> 
+
+		    <if test="content != null">
+		      	#{content,jdbcType=LONGVARCHAR},
+		    </if>
+		    <if test="content == null">
+		      	null,
+		    </if> 
+		    
+		    <if test="reply != null">
+		      	#{reply,jdbcType=LONGVARCHAR}
+		    </if>
+		    <if test="reply == null">
+		      	null
+		    </if> 
+      )
+  </insert>
+
+	<!--  分页查询  -->
+	<select id="findPage" resultMap="BaseLeaveMessageMap" parameterType="map">
+		select 
+		  		* 
+		from <include refid="Table_Name" />
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.content != null and search.content != ''">  
+            	content like  "%"#{search.content}"%"
+       	 	</if>  
+		</trim>
+	</select> 
+	
+	<select id="count" resultType="long">
+		select count(*) 
+		from <include refid="Table_Name" />
+	</select>
+
+	<select id="remove" parameterType="java.lang.String">
+		delete from <include refid="Table_Name" />
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+			 
+</mapper>

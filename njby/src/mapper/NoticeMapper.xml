@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.NoticeDao">
+	
+	<sql id="Table_Name">
+		notice
+	</sql>
+
+  	<resultMap id="BaseNoticeMap" type="Notice" >
+	    <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="author" property="author" jdbcType="VARCHAR" />
+	    <result column="seo_title" property="seoTitle" jdbcType="VARCHAR" />
+	    <result column="seo_keywords" property="seoKeywords" jdbcType="VARCHAR" />
+	    <result column="seo_description" property="seoDescription" jdbcType="VARCHAR" />
+	    <result column="is_publication" property="isPublication" jdbcType="BIT" />
+	    <result column="hits" property="hits" jdbcType="INTEGER" />
+  	</resultMap>
+  
+
+   <insert id="save" parameterType="Notice" >
+	  	<selectKey keyProperty="id" resultType="String" order="BEFORE">
+				select replace(uuid(),'-','')
+		</selectKey>
+			
+	    insert into <include refid="Table_Name" /> 
+	    	(
+	    		id, create_date, modify_date, 
+	      		title, author, seo_title, 
+	      		seo_keywords, seo_description, is_publication, 
+	      		hits, content
+	      	)
+	    values (#{id,jdbcType=VARCHAR}, 
+	    		now(),
+	    		now(), 
+	        	#{title, jdbcType=VARCHAR}, 
+	
+	    		<if test="author != null" >
+	        		#{author, jdbcType=VARCHAR}, 
+	      		</if>
+	    		<if test="author == null" >
+	        		null,  
+	      		</if> 
+	      		
+	      		<if test="seoTitle != null" >
+	        		#{seoTitle,jdbcType=VARCHAR}, 
+	      		</if>
+	    		<if test="seoTitle == null" >
+	        		null, 
+	      		</if> 
+	      		
+	      		<if test="seoKeywords != null" >
+	        		#{seoKeywords,jdbcType=VARCHAR}, 
+	      		</if>
+	    		<if test="seoKeywords == null" >
+	        		null, 
+	      		</if>       		    		
+	 
+	      		<if test="seoDescription != null" >
+	        		#{seoDescription,jdbcType=VARCHAR}, 
+	      		</if>
+	    		<if test="seoDescription == null" >
+	        		null, 
+	      		</if> 
+	      		
+	       		<if test="isPublication != null" >
+	        		#{isPublication,jdbcType=VARCHAR}, 
+	      		</if>
+	    		<if test="isPublication == null" >
+	        		0, 
+	      		</if>    
+	      		
+	           	<if test="hits != null" >
+	        		#{hits,jdbcType=INTEGER}, 
+	      		</if>
+	    		<if test="hits == null" >
+	        		0, 
+	      		</if> 
+	     	  		  		      		      		      		   		
+	      		#{content,jdbcType=VARCHAR}
+	      )
+    </insert>
+  
+  	
+	<select id="findPage" resultMap="BaseNoticeMap" parameterType="map">
+		select 
+			*
+		from <include refid="Table_Name" /> 
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.title != null and search.title != ''">  
+            	title like  "%"#{search.title}"%"
+       	 	</if>  
+		</trim>
+	</select>	
+	
+	<select id="findList" resultMap="BaseNoticeMap" parameterType="int">
+		select *
+		from <include refid="Table_Name" />
+		where is_publication = 1
+		order by create_date desc
+		limit 0, #{count, jdbcType=INTEGER}
+	</select>	
+		
+</mapper>

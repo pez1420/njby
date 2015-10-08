@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.AdPositionDao">
+	
+	<sql id="Table_Name">
+		ad_position
+	</sql>
+	
+	<resultMap id="BaseAdPositionMap" type="AdPosition">
+	    <id property="id" jdbcType="VARCHAR"  column="id"/>
+	    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="width" column="width" jdbcType="INTEGER" />
+	    <result property="height" column="height" jdbcType="INTEGER" />
+	    <result property="name" column="name"  jdbcType="VARCHAR"  />
+    	<result property="template" column="template"  jdbcType="LONGVARCHAR" />
+    	<result property="description" column="description" jdbcType="VARCHAR"/>
+	</resultMap>	
+
+  	<insert id="save" parameterType="AdPosition" >
+  		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+    	insert into <include refid="Table_Name" /> (id, create_date, modify_date, 
+      		description, height, name, width, template)
+    	values (#{id,jdbcType=VARCHAR}, now(), now(), 
+    	      	<if test="description != null" >
+        			#{description,jdbcType=VARCHAR}, 
+      			</if>
+      			<if test="description == null" >
+        			null,
+      			</if>
+      			
+	      		#{height,jdbcType=INTEGER}, 
+	      		#{name,jdbcType=VARCHAR}, 
+	      		#{width,jdbcType=INTEGER}, 
+	      		#{template,jdbcType=LONGVARCHAR})
+  	</insert>
+ 
+ 	<select id="find" resultMap="BaseAdPositionMap" parameterType="java.lang.String" >
+	    select *
+	    from <include refid="Table_Name" />
+	    where id = #{id,jdbcType=VARCHAR}
+  	</select> 
+  	
+	<select id="findPage" resultMap="BaseAdPositionMap" parameterType="map">
+		select *
+		from <include refid="Table_Name" />
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.name != null and search.name != ''">  
+            	name like  "%"#{search.name}"%"
+       	 	</if>  
+       	 	
+		</trim>
+	</select>
+		
+</mapper>

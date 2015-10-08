@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.RoleDao">
+
+	<sql id="Table_Name">
+		role
+	</sql>
+
+	<sql id="Table_Column_List" >
+	    id, create_date, modify_date, description, is_system, name
+	</sql>
+
+	<resultMap id="RoleMap" type="Role" >
+	    <id property="id" column="id"  jdbcType="VARCHAR" />
+	    <result property="createDate" column="create_date"  jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date"  jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result property="description" column="description"  jdbcType="VARCHAR" />
+	    <result property="isSystem" column="is_system"  jdbcType="BIT" />
+	    <result property="name" column="name"  jdbcType="VARCHAR" />
+	</resultMap>
+
+	
+	<resultMap id="RoleAdminMap" type="Role" extends="RoleMap">  
+		<collection property="admins" ofType="Admin" columnPrefix="admin_">
+			<id property="id" column="id" jdbcType="VARCHAR"/>
+		    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+		    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+		    <result property="password" column="password" jdbcType="VARCHAR" />
+		    <result property="username" column="username" jdbcType="VARCHAR" />
+		    <result property="email" column="email"  jdbcType="VARCHAR"  />
+		</collection>	
+	</resultMap>
+
+			
+	<resultMap id="RoleAuthorityMap" type="RoleAuthority" >
+	    <result property="roleId" column="role_id"  jdbcType="VARCHAR" />
+	    <result property="authorities" column="authorities"  jdbcType="VARCHAR" />
+	</resultMap>
+		
+	<insert id="save" parameterType="Role">
+	  	<selectKey keyProperty="id" resultType="String" order="BEFORE">
+				select replace(uuid(),'-','')
+		</selectKey>  
+	    insert into <include refid="Table_Name" /> (
+	    	id, create_date, modify_date, 
+	      	description, is_system, name
+	      )
+	    values (#{id,jdbcType=VARCHAR}, 
+		    	now(), 
+		    	now(), 
+		    	<if test="description != null and description !=''">
+			      	#{description,jdbcType=VARCHAR},
+			    </if>
+			    <if test="description == null or description == ''">
+			      	null,
+			     </if>
+		     	#{isSystem,jdbcType=BIT}, 
+		       	#{name,jdbcType=VARCHAR}
+	      )
+  	</insert>
+  	
+   	<select id="find" resultMap="RoleMap" parameterType="java.lang.String" >
+	    select 
+	    	<include refid="Table_Column_List" />
+	    from <include refid="Table_Name" />
+	    where id = #{id,jdbcType=VARCHAR}
+  	</select>
+	
+	<delete id="remove" parameterType="java.lang.String" >
+	    delete from <include refid="Table_Name" />
+	    where id = #{id,jdbcType=VARCHAR}
+	</delete>  	
+	
+	<update id="update" parameterType="Role" >
+	    update <include refid="Table_Name" />
+	    set modify_date = now(),
+	      	description = #{description,jdbcType=VARCHAR},
+	      	is_system = #{isSystem,jdbcType=BIT},
+	      	name = #{name,jdbcType=VARCHAR}
+	    where id = #{id,jdbcType=VARCHAR}
+	 </update>
+  	
+   	<select id="findAll" resultMap="RoleMap">
+	    select 
+	    	<include refid="Table_Column_List" />
+	    from <include refid="Table_Name" />
+  	</select>
+  	
+  	<!--  分页查询  -->
+	<select id="findPage" resultMap="RoleMap" parameterType="map">
+		select 
+		  	<include refid="Table_Column_List" />
+		from <include refid="Table_Name" />
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.name != null and search.name != ''">  
+            	name like  "%"#{search.name}"%"
+       	 	</if>  
+		</trim>
+	</select>
+
+
+    <!-- 根据role表中的id或name查询角色信息和角色内用户信息 -->  
+    <select id="findRoleAdmin" parameterType="Role"  
+        resultMap="RoleAdminMap">  
+        select
+            B.id as id,
+        	B.name as name,
+        	B.create_date as create_date,
+        	A.id as id,
+        	A.username as admin_username,  
+        	A.email as admin_email
+        	from role B left  
+        		join admin_role AR on B.id=AR.role_id 
+        		left join admin A on AR.admin_id= A.id  
+        <trim prefix="where" prefixOverrides="or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="id != null and id != ''">  
+            	B.id = #{id}
+       	 	</if>  
+       	 	<if test="name != null and name != ''">  
+	             or B.name = #{name}  
+	         </if>  
+		</trim> 
+    </select>   	
+
+
+     <select id="findRoleAuthorities" resultMap="RoleAuthorityMap" 
+     		parameterType="Role">
+     		select 
+     			*
+     		from role_authority
+        <trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="id != null and id != ''">  
+            	role_id = #{id}
+       	 	</if>   
+		</trim>      		
+	 </select>
+	 
+	     <!-- 向admin_role保存用户和角色关系  -->
+	<insert id="saveRoleAuthorities" parameterType="RoleAuthority">  
+        insert into role_authority(role_id, authorities)  
+        values(
+        		#{roleId,jdbcType=VARCHAR},
+        		#{authorities,jdbcType=VARCHAR})  
+    </insert>  
+    
+    <!-- 删除admin时，同时将关联表admin_role对应的记录 -->
+    <delete id="deleteRoleAuthorities" parameterType="RoleAuthority">
+    	delete from role_authority
+		<trim prefix="where" prefixOverrides="and">
+			<!-- 非空ognl有相应方法 -->
+			<if test="roleId != null and roleId  != ''">  
+            	role_id = #{roleId,jdbcType=VARCHAR}
+       	 	</if>  
+			<if test="authorities != null and authorities != ''">  
+            	and authorities = #{authorities,jdbcType=VARCHAR}
+       	 	</if> 
+		</trim>
+		
+    </delete>
+
+     <select id="findRolesByIds" resultMap="RoleMap">
+	     select * 
+	     from <include refid="Table_Name" />
+	     where id in 
+	     <foreach item="item" index="index" collection="array"  open="(" separator="," close=")">
+	     #{item}
+		</foreach>
+	</select>
+	
+</mapper>

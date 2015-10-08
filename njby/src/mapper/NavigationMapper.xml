@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.NavigationDao">
+	<sql id="Table_Name">
+		navigation
+	</sql>
+
+	<resultMap id="BaseNavigationMap" type="Navigation">
+	    <id property="id" jdbcType="VARCHAR"  column="id"/>
+	    <result property="createDate" column="create_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="modifyDate" column="modify_date" jdbcType="TIMESTAMP"  javaType="java.util.Date"/>
+	    <result property="position" column="position" jdbcType="INTEGER" />
+	    <result property="url" column="url" jdbcType="VARCHAR" />
+    	<result property="isBlankTarget" column="is_blank_target"  jdbcType="BIT" />
+	</resultMap>
+	
+	<insert id="save" parameterType="Navigation">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			select replace(uuid(),'-','')
+		</selectKey>
+	    insert into <include refid="Table_Name" />
+	     		(id, create_date, modify_date, orders, 
+	     			name, position, url, is_blank_target)
+    	values (#{id,jdbcType=VARCHAR}, now(), now(), 
+     		 	#{orders,jdbcType=INTEGER}, 
+     		 	#{name,jdbcType=VARCHAR}, 
+     		 	#{position,jdbcType=INTEGER}, 
+      			#{url,jdbcType=VARCHAR}, 
+      			#{isBlankTarget,jdbcType=BIT})
+	</insert>
+	
+	<update id="update" parameterType="Navigation">
+	    update <include refid="Table_Name" />
+    	set modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+      		orders 		= #{orders,jdbcType=INTEGER},
+      		name 		= #{name,jdbcType=VARCHAR},
+      		position	= #{position,jdbcType=INTEGER},
+      		url 		= #{url,jdbcType=VARCHAR},
+      		is_blank_target = #{isBlankTarget,jdbcType=BIT}
+    	where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<select id="findList" resultMap="BaseNavigationMap" parameterType="int">
+		select *
+		from <include refid="Table_Name" />
+		where #{position,jdbcType=INTEGER}
+		order by orders asc
+	</select>
+
+	<select id="findPage" resultMap="BaseNavigationMap" parameterType="map">
+		select *
+		from <include refid="Table_Name" />
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.name != null and search.name != ''">  
+            	name like  "%"#{search.name}"%"
+       	 	</if> 
+       	 	
+       	 	<if test="search.position != null">  
+            	and position = #{search.position}
+       	 	</if>  
+       	 	
+		</trim>
+		order by orders asc
+	</select>
+		
+</mapper>

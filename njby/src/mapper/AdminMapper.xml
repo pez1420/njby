@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.AdminDao">
+
+	<sql id="Table_Name">
+		admin
+	</sql>
+
+	<sql id="Db_Time">
+		now()
+	</sql>
+
+	<sql id="UUID">
+		select replace(uuid(),'-','')
+	</sql>
+
+	<!-- 基本管理员map -->
+	<resultMap id="AdminMap" type="Admin">
+		<id property="id" column="admin_id" jdbcType="VARCHAR" />
+		<result property="createDate" column="admin_create_date"
+			jdbcType="TIMESTAMP" javaType="java.util.Date" />
+		<result property="modifyDate" column="admin_modify_date"
+			jdbcType="TIMESTAMP" javaType="java.util.Date" />
+		<result property="password" column="admin_password" jdbcType="VARCHAR" />
+		<result property="username" column="admin_username" jdbcType="VARCHAR" />
+		<result property="email" column="admin_email" jdbcType="VARCHAR" />
+		<result property="isEnabled" column="admin_is_enabled"
+			jdbcType="BIT" />
+		<result property="loginDate" column="admin_login_date"
+			jdbcType="TIMESTAMP" javaType="java.util.Date" />
+		<result property="loginIp" column="admin_login_ip" jdbcType="VARCHAR" />
+		<result property="isLocked" column="admin_is_locked" jdbcType="BIT" />
+		<result property="loginFailureCount" column="admin_login_failure_count"
+			jdbcType="INTEGER" />
+		<result property="lockedDate" column="admin_locked_date"
+			jdbcType="TIMESTAMP" javaType="java.util.Date" />
+	</resultMap>
+
+	<resultMap id="AdminRoleMap" type="Admin" extends="AdminMap">
+		<collection property="roles" ofType="Role">
+			<id property="id" column="role_id" />
+			<result property="name" column="role_name" />
+			<result property="createDate" column="role_create_date"
+				jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<result property="modifyDate" column="role_modify_date"
+				jdbcType="TIMESTAMP" javaType="java.util.Date" />
+			<result property="description" column="role_description" />
+			<result property="isSystem" column="role_is_system" />
+		</collection>
+	</resultMap>
+
+
+	<!-- 增加一条Admin记录 -->
+	<insert id="save" parameterType="Admin">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			<include refid="UUID" />
+		</selectKey>
+		insert into
+		<include refid="Table_Name" />
+		( id, create_date, modify_date,
+			password, username, email,
+			is_enabled,
+			login_date,
+			login_ip,
+			is_locked,
+			login_failure_count,
+			locked_date
+		)
+		values
+		(#{id,jdbcType=VARCHAR},
+		<include refid="Db_Time" />
+		,
+		<include refid="Db_Time" />
+		,
+		#{password,jdbcType=VARCHAR},
+		#{username,jdbcType=VARCHAR},
+		#{email,jdbcType=VARCHAR},
+		#{isEnabled,jdbcType=BIT},
+		<if test="loginDate != null">
+			#{loginDate,jdbcType=TIMESTAMP},
+		</if>
+		<if test="loginDate == null">
+			null,
+		</if>
+
+		<if test="loginIp != null">
+			#{loginIp,jdbcType=VARCHAR},
+		</if>
+		<if test="loginIp == null">
+			null,
+		</if>
+
+		<if test="isLocked != null">
+			#{isLocked,jdbcType=BIT},
+		</if>
+		<if test="isLocked == null">
+			0,
+		</if>
+
+		<if test="loginFailureCount != null">
+			#{loginFailureCount,jdbcType=INTEGER},
+		</if>
+		<if test="loginFailureCount == null">
+			0,
+		</if>
+
+		<if test="lockedDate != null">
+			#{lockedDate,jdbcType=TIMESTAMP}
+		</if>
+		<if test="lockedDate == null">
+			null
+		</if>
+
+		)
+	</insert>
+
+	<update id="update" parameterType="Admin">
+		update
+			<include refid="Table_Name" />
+			set
+			modify_date = now(),
+			password = #{password,jdbcType=VARCHAR},
+			username = #{username,jdbcType=VARCHAR},
+			email = #{email,jdbcType=VARCHAR},
+			<if test="loginDate != null">
+				login_date = #{loginDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="loginIp != null">
+				login_ip = #{loginIp,jdbcType=VARCHAR},
+			</if>
+			
+			<if test="isLocked != null">
+				is_locked = #{isLocked,jdbcType=BIT},
+			</if>
+			
+			<if test="lockedDate != null">
+				locked_date =  #{lockedDate,jdbcType=TIMESTAMP},
+			</if>
+			
+			<if test="loginFailureCount != null">
+				login_failure_count = #{loginFailureCount,jdbcType=INTEGER},
+			</if>
+				is_enabled  = #{isEnabled,jdbcType=BIT}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 根据主键返回Admin记录 -->
+	<select id="find" resultMap="AdminMap" parameterType="java.lang.String">
+		select
+		A.id as admin_id,
+		A.create_date as admin_create_date,
+		A.modify_date as admin_modify_date,
+		A.password as admin_password,
+		A.username as admin_username,
+		A.email as admin_email,
+		A.is_enabled as
+		admin_is_enabled,
+		A.login_date as admin_login_date,
+		A.login_ip as
+		admin_login_ip,
+		A.is_locked as admin_is_locked,
+		A.login_failure_count as
+		admin_login_failure_count,
+		A.locked_date as admin_locked_date
+		from
+		<include refid="Table_Name" />
+		A
+		where A.id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="count" resultType="long">
+		select count(*)
+		from
+		<include refid="Table_Name" />
+	</select>
+
+	<delete id="remove" parameterType="java.lang.String">
+		delete from
+		<include refid="Table_Name" />
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- 根据admin表中的id查询用户和角色信息 -->
+	<select id="findAdminRole" resultMap="AdminRoleMap"
+		parameterType="java.lang.String">
+		select
+		A.id as admin_id,
+		A.create_date as admin_create_date,
+		A.modify_date as admin_modify_date,
+		A.password as admin_password,
+		A.username as admin_username,
+		A.email as admin_email,
+		A.is_enabled as admin_is_enabled,
+		A.login_date as admin_login_date,
+		A.login_ip as admin_login_ip,
+		B.id as role_id,
+		B.name as role_name,
+		B.create_date as
+		role_create_date,
+		B.modify_date as role_modify_date,
+		B.description as
+		role_description,
+		B.is_system as role_is_system
+		from
+		<include refid="Table_Name" /> A
+		left join admin_role AR on A.id = AR.admin_id
+		left join role B on
+		AR.role_id = B.id
+		where A.id = #{id}
+	</select>
+
+	<!-- 向admin_role保存用户和角色关系 -->
+	<insert id="saveRelativity" parameterType="AdminRoleLink">
+		insert into
+		admin_role(admin_id, role_id)
+		values(
+		#{admin.id,jdbcType=VARCHAR},
+		#{role.id,jdbcType=VARCHAR})
+	</insert>
+
+	<!-- 删除admin时，同时将关联表admin_role对应的记录 -->
+	<delete id="removeRelativity" parameterType="AdminRoleLink">
+		delete from admin_role
+		<trim prefix="where" prefixOverrides="and">
+			<!-- 非空ognl有相应方法 -->
+			<if test="admin != null and admin.id != null and admin.id != ''">
+				admin_id = #{admin.id,jdbcType=VARCHAR}
+			</if>
+			<if test="role != null and role.id != null and role.id != ''">
+				and role_id = #{role.id,jdbcType=VARCHAR}
+			</if>
+		</trim>
+
+	</delete>
+
+	<!-- 分页查询 -->
+	<select id="findPage" resultMap="AdminMap" parameterType="map">
+		select
+		id as admin_id,
+		create_date as admin_create_date,
+		modify_date as
+		admin_modify_date,
+		password as admin_password,
+		username as
+		admin_username,
+		email as admin_email,
+		is_enabled as admin_is_enabled,
+		login_date as admin_login_date,
+		login_ip as admin_login_ip
+		from
+		<include refid="Table_Name" />
+		<trim prefix="where" prefixOverrides="and|or">
+			<!-- 非空ognl有相应方法 -->
+			<if test="search.username != null and search.username != ''">
+				username like "%"#{search.username}"%"
+			</if>
+			<if test="search.email != null and search.email != ''">
+				and email like "%"#{search.email}"%"
+			</if>
+		</trim>
+	</select>
+
+	<!-- 检测用户是否存在 -->
+	<select id="usernameExists" parameterType="java.lang.String"
+		resultType="long">
+		select count(id)
+		from
+		<include refid="Table_Name" />
+		where username = #{username,jdbcType=VARCHAR}
+	</select>
+
+
+	<!-- 根据admin表中的id返回AdminRoleLink -->
+	<select id="findAdminRoles" resultMap="AdminRoleMap"
+		parameterType="java.lang.String">
+		select
+		C.id 			as admin_id,
+		C.username 		as admin_username,
+		C.password 		as admin_password,
+		C.email     	as admin_email,
+		C.is_enabled    as admin_is_enabled,
+		B.id            as role_id,
+		B.name          as role_name,
+		B.create_date   as role_create_date,
+		B.modify_date   as role_modify_date,
+		B.description   as role_description,
+		B.is_system     as role_is_system
+		from <include refid="Table_Name" /> C left join admin_role A 
+			on C.id = A.admin_id  inner join role B on A.role_id = B.id
+		where A.admin_id = #{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findAuthorities" resultType="java.lang.String"
+		parameterType="java.lang.String">
+		select
+		D.authorities as authorities
+		from admin A left join
+		admin_role B on A.id =
+		B.admin_id
+		left join role C on B.role_id = C.id
+		left join role_authority D on C.id = D.role_id
+		where A.id =
+		#{id,jdbcType=VARCHAR}
+	</select>
+
+	<select id="findByUsername" resultMap="AdminMap" parameterType="java.lang.String">
+		select
+			id as admin_id,
+			create_date as admin_create_date,
+			modify_date as admin_modify_date,
+			username as admin_username,
+			password as admin_password,
+			email as admin_email,
+			is_enabled as admin_is_enabled,
+			login_date as admin_login_date,
+			login_ip as admin_login_ip,
+			is_locked as admin_is_locked,
+			login_failure_count as admin_login_failure_count,
+			locked_date as admin_locked_date 
+		from <include refid="Table_Name" />
+		where username = #{username,jdbcType=VARCHAR}
+	</select>
+</mapper>

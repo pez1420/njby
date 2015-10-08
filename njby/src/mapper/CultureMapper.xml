@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.CultureDao">
+    <sql id="Table_Name">
+        culture
+    </sql>
+
+    <sql id="Db_Time">
+        now()
+    </sql>
+
+    <sql id="UUID">
+        select replace(uuid(),'-','')
+    </sql>
+
+    <resultMap id="CultureMap" type="Culture">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+	    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+	    <result column="title" property="title" jdbcType="VARCHAR" />
+	    <result column="detail"  property="detail" jdbcType="LONGVARCHAR" />
+	    <result column="icon" property="icon" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="save" parameterType="Culture">
+        <selectKey keyProperty="id" resultType="String" order="BEFORE">
+            <include refid="UUID" />
+        </selectKey>
+            insert into <include refid="Table_Name" />
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+	        id,
+	        create_date,
+	        modify_date,
+	      <if test="title != null" >
+	        title,
+	      </if>
+	      <if test="icon != null" >
+	        icon,
+	      </if>
+	      <if test="detail != null" >
+	        detail,
+	      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	        #{id,jdbcType=VARCHAR},
+			<include refid="Db_Time" />,
+			<include refid="Db_Time" />,
+		    <if test="title != null" >
+		        #{title,jdbcType=VARCHAR},
+		    </if>
+		    <if test="icon != null" >
+		        #{icon,jdbcType=VARCHAR},
+		    </if>
+		    <if test="detail != null" >
+		        #{detail,jdbcType=LONGVARCHAR},
+		    </if>
+	    </trim>
+    </insert>
+
+    <update id="update" parameterType="Culture">
+        
+    </update>
+
+    <select id="find" resultMap="CultureMap" parameterType="java.lang.String">
+        
+    </select>
+
+    <select id="count" resultType="long">
+            select count(*) from 
+            <include refid="Table_Name" />
+    </select>
+
+    <select id="findPage" resultMap="CultureMap" parameterType="map">
+        select * from <include refid="Table_Name" /> 
+        <trim prefix="where" prefixOverrides="and|or">
+        	<if test="search.title != null and search.title != ''">
+				title like "%"#{search.title}"%"
+			</if>
+        </trim>
+    </select>
+
+	<select id="findList" resultMap="CultureMap" parameterType="int">
+		select *
+		from <include refid="Table_Name" />
+		order by create_date desc
+		limit 0, #{count, jdbcType=INTEGER}
+	</select>	
+	
+</mapper>
