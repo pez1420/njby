@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.njby.dao.EquipmentDao">
+	<sql id="Table_Name">
+		equipment
+	</sql>
+
+	<sql id="Db_Time">
+		now()
+	</sql>
+
+	<sql id="UUID">
+		select replace(uuid(),'-','')
+	</sql>
+
+	<resultMap id="EquipmentMap" type="Equipment">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP"
+			javaType="java.util.Date" />
+		<result column="modify_date" property="modifyDate" jdbcType="TIMESTAMP"
+			javaType="java.util.Date" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="introduction" property="introduction" jdbcType="VARCHAR" />
+		<result column="thumbnail_image" property="thumbnailImage"
+			jdbcType="VARCHAR" />
+		<result column="large_image" property="largeImage" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<insert id="save" parameterType="Equipment">
+		<selectKey keyProperty="id" resultType="String" order="BEFORE">
+			<include refid="UUID" />
+		</selectKey>
+		    insert into <include refid="Table_Name" />
+	    <trim prefix="(" suffix=")" suffixOverrides="," >
+		        id,
+		        create_date,
+		        modify_date,
+		      <if test="name != null" >
+		        name,
+		      </if>
+		      <if test="introduction != null" >
+		        introduction,
+		      </if>
+		      <if test="thumbnailImage != null" >
+		        thumbnail_image,
+		      </if>
+		      <if test="largeImage != null" >
+		        large_image,
+		      </if>
+	    </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	        #{id,jdbcType=VARCHAR},
+			<include refid="Db_Time" />,
+			<include refid="Db_Time" />,
+	      <if test="name != null" >
+	        #{name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="introduction != null" >
+	        #{introduction,jdbcType=VARCHAR},
+	      </if>
+	      <if test="thumbnailImage != null" >
+	        #{thumbnailImage,jdbcType=VARCHAR},
+	      </if>
+	      <if test="largeImage != null" >
+	        #{largeImage,jdbcType=VARCHAR},
+	      </if>
+	    </trim>
+	</insert>
+
+	<update id="update" parameterType="Equipment">
+
+	</update>
+
+	<select id="find" resultMap="EquipmentMap" parameterType="java.lang.String">
+
+	</select>
+
+	<select id="count" resultType="long">
+		select count(*) from
+		<include refid="Table_Name" />
+	</select>
+
+	<select id="findPage" resultMap="EquipmentMap" parameterType="map">
+		select * from
+		<include refid="Table_Name" />
+		<trim prefix="where" prefixOverrides="and|or">
+			<if test="search !=null and search.name != null and search.name != ''">
+				name like "%"#{search.name}"%"
+			</if>
+		</trim>
+	</select>
+
+</mapper>

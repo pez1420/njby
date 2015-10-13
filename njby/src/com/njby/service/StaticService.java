@@ -16,6 +16,8 @@ public interface StaticService {
 	  
 	  public abstract int buildAboutus();
 	  
+	  public abstract int buildContactus();
+	  
 	  public abstract int buildSitemap();
 	  
 	  public abstract int buildOther();

@@ -77,10 +77,12 @@ public class StaticController extends BaseAdminController {
 		//首页
 		if (buildType.intValue() == 0) {
 			this.staticService.buildIndex();
-		}
-
-		if (buildType.intValue() == 1) {
+		} else if (buildType.intValue() == 1) {
 			this.staticService.buildAboutus();
+		} else if (buildType.intValue() == 2) {
+			this.staticService.buildAboutus();
+		} else {
+			this.staticService.buildAll();
 		}
 		
 		//结束时间

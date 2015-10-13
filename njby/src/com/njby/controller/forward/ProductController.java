@@ -33,7 +33,7 @@ public class ProductController extends BaseForwardController {
 		if (productType == null) {
 			throw new ResourceNotFoundException();
 		}
-		pageSize = 12;
+		pageSize = 8;
 		Pageable pageable = new Pageable(pageNumber, pageSize);
 		model.addAttribute("productType", productType);
 	    model.addAttribute("pageNumber", pageNumber);

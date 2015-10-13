@@ -30,7 +30,7 @@
         </javaClientGenerator>
            
         
-    <table tableName="culture" domainObjectName="Culture">
+    <table tableName="equipment" domainObjectName="Equipment">
  	</table> 
                            
   </context>

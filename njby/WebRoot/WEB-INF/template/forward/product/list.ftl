@@ -68,11 +68,14 @@
 				                        </div>
 				                        <div id="item${productType_index}" class="panel-collapse collapse in">
 			                            	<ul class="list-group">
+			                            		<li class="list-group-item">
+			                            			<a href="${base}${productType.path}">${productType.name}</a>
+			                            		</li>
 					                        	[@product_type_children_list productTypeId = productType.id count = 10]
 													[#list productTypes as productType]					
 					                                	<li class="list-group-item">
 					                                		<a href="${base}${productType.path}">
-					                                			<i class="fa fa-star"></i>&nbsp;${productType.name}
+					                                			&nbsp;&nbsp;${productType.name}
 					                                		</a>
 					                                	</li>
 													[/#list]

@@ -41,7 +41,7 @@
             <div class="col-md-12">
                 <div class="panel">
                     <div class="panel-heading">
-                        生成静态
+                       	 生成静态页面
                     </div>
                     <div class="panel-body">
                         <form  class="form-horizontal" id="inputForm" action="build.jhtml" method="post" role="form">
@@ -52,6 +52,8 @@
                                     <select class="form-control input-sm" id="buildType" name="buildType">
                                         <option value="0">首页</option>
                                         <option value="1">关于我们</option>
+                                        <option value="2">联系我们</option>
+                                        <option value="-1">所有</option>
                                     </select>
                                 </div>
                             </div>

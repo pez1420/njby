@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
          <typeAlias alias="RoleAuthority" type="com.njby.entity.RoleAuthority"/>
          <typeAlias alias="Culture" type="com.njby.entity.Culture"/>
          <typeAlias alias="Firm" type="com.njby.entity.Firm"/>
+         <typeAlias alias="Equipment" type="com.njby.entity.Equipment"/>
          
          <typeAlias alias="Pageable" type="com.njby.utils.Pageable"/>
     </typeAliases>

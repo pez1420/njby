@@ -93,6 +93,15 @@ public class StaticServiceImpl implements StaticService, ServletContextAware{
 		return build(template.getTemplatePath(),
 				template.getStaticPath());
 	}
+
+
+	@Transactional(readOnly = true)
+	public int buildContactus() {
+		com.system.Template template = this.templateService.get("contactus");
+		return build(template.getTemplatePath(),
+				template.getStaticPath());
+	}
+
 	
 	@Override
 	public int buildSitemap() {
@@ -109,7 +118,9 @@ public class StaticServiceImpl implements StaticService, ServletContextAware{
 	@Transactional(readOnly = true)
 	public int buildAll() {
 		int i = 0;
-		buildIndex();
+		this.buildIndex();
+		this.buildContactus();
+		this.buildAboutus();
 		return i;
 	}
 

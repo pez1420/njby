@@ -15,7 +15,9 @@
 	<logConfig operation="编辑管理员" urlPattern="/admin/admin/update.jhtml" />
 	<logConfig operation="删除管理员" urlPattern="/admin/admin/delete.jhtml" />
 	
-	<template id="index" type="0" name="首页" templatePath="/forward/index.ftl" staticPath="/index.html" />
-	<template id="aboutus" type="0" name="关于我们" templatePath="/forward/aboutus/aboutus.ftl" staticPath="/aboutus.html" />
-	
+	<template id="index"      type="0" name="首页"    templatePath="/forward/index.ftl"           staticPath="/index.html" />
+	<template id="aboutus"    type="0" name="关于我们" templatePath="/forward/aboutus/aboutus.ftl" staticPath="/aboutus.html" />
+	<template id="services"   type="0" name="产品中心" templatePath="/forward/product/list.ftl"    staticPath="#" />
+	<template id="equipments" type="0" name="生产设备" templatePath="/forward/equipment/list.ftl"  staticPath="#" />
+	<template id="contactus"  type="0" name="联系我们" templatePath="/forward/contact/contact.ftl" staticPath="/contactus.html" />
 </system>

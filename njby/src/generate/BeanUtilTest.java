@@ -7,7 +7,7 @@ public class BeanUtilTest {
 	public static void main(String[] args) throws Exception{
 		BeanUtilTest beanUtilTest = new BeanUtilTest();
 		BeanUtils beanUtils = new BeanUtils();
-		beanUtilTest.beanTool(beanUtils, Culture.class);
+		beanUtilTest.beanTool(beanUtils, Equipment.class);
 
 
 	}
@@ -18,7 +18,7 @@ public class BeanUtilTest {
 	 * @param c
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public void beanTool(BeanUtils beanUtils ,Class c)throws Exception{
 		beanUtils.createBeanXml(c);
 		beanUtils.createBeanController(c);
@@ -34,7 +34,7 @@ public class BeanUtilTest {
 	 * @param c
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public void pageTool(Class c)throws Exception{
 		PageUtils pageUtils = new PageUtils();
 		String parentPath = "";
