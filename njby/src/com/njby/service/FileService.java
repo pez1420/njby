@@ -22,7 +22,6 @@ public interface FileService {
 	/**
 	 * 上传文件
 	 * 
-	 * @param request
 	 * 
 	 * @param fileType
 	 * 
@@ -30,6 +29,6 @@ public interface FileService {
 	 * 
 	 * @return 
 	 */
-	public String upload(HttpServletRequest request, FileInfo.FileType fileType, MultipartFile multipartFile);
+	public String upload(FileInfo.FileType fileType, MultipartFile multipartFile);
 	
 }

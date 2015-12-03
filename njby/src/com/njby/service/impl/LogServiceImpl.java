@@ -7,9 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import com.njby.dao.LogDao;
-import com.njby.entity.Admin;
 import com.njby.entity.Log;
 import com.njby.entity.search.SearchLog;
 import com.njby.service.LogService;

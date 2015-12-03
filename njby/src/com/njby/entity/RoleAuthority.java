@@ -32,26 +32,30 @@ public class RoleAuthority implements Serializable{
 		this.authorities = authorities;
 	}
 	
-	  @Override
-	    public int hashCode() {
-	        HashCodeBuilder builder = new HashCodeBuilder(17, 29);
-	        builder.append(this.getRoleId());
-	        builder.append(this.getAuthorities());
-	        return builder.toHashCode();
-	    }
+	@Override
+	public int hashCode() {
+		HashCodeBuilder builder = new HashCodeBuilder(17, 29);
+	    builder.append(this.getRoleId());
+	    builder.append(this.getAuthorities());
+	    
+	    return builder.toHashCode();
+	}
 	  
-	    @Override
-	    public boolean equals(final Object obj) {
-	        if (obj == this) {
-	            return true;
-	        }
-	        if (!(obj instanceof RoleAuthority)) {
-	            return false;
-	        }
-	        RoleAuthority other = (RoleAuthority) obj;
-	        EqualsBuilder builder = new EqualsBuilder();
-	        builder.append(this.getRoleId(), other.getRoleId());
-	        builder.append(this.getAuthorities(), other.getAuthorities());
-	        return builder.isEquals();
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == this) {
+			return true;
 	    }
+	    
+		if (!(obj instanceof RoleAuthority)) {
+			return false;
+	    }
+	        
+		RoleAuthority other = (RoleAuthority) obj;
+		EqualsBuilder builder = new EqualsBuilder();
+		builder.append(this.getRoleId(), other.getRoleId());
+		builder.append(this.getAuthorities(), other.getAuthorities());
+
+		return builder.isEquals();
+	}
 }

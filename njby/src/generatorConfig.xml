@@ -30,7 +30,7 @@
         </javaClientGenerator>
            
         
-    <table tableName="equipment" domainObjectName="Equipment">
+    <table tableName="product_image" domainObjectName="ProductImage">
  	</table> 
                            
   </context>

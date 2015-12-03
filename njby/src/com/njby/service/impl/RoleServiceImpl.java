@@ -8,6 +8,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,6 @@ import com.njby.entity.search.SearchRole;
 import com.njby.service.RoleService;
 import com.njby.utils.Page;
 import com.njby.utils.Pageable;
-
 
 
 @Service
@@ -41,11 +42,13 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, String>
 		List<RoleAuthority> pageRoleAuthorities = new ArrayList<RoleAuthority>();
 		List<RoleAuthority> dbRoleAuthorities = this.roleDao.findRoleAuthorities(role);
 		
-		for (String authority : authorities) {
-				RoleAuthority ra = new RoleAuthority();
-				ra.setRoleId(role.getId());
-				ra.setAuthorities(authority);
-				pageRoleAuthorities.add(ra);
+		if (ArrayUtils.isNotEmpty(authorities)) {
+			for (String authority : authorities) {
+					RoleAuthority ra = new RoleAuthority();
+					ra.setRoleId(role.getId());
+					ra.setAuthorities(authority);
+					pageRoleAuthorities.add(ra);
+			}
 		}
 		
 		if (dbRoleAuthorities == null) {
@@ -103,5 +106,55 @@ public class RoleServiceImpl extends BaseServiceImpl<Role, String>
 	public List<Role> findRolesByIds(String[] ids) {
 		return this.roleDao.findRolesByIds(ids);
 	}
+
+	@Transactional(readOnly = true)
+	public List<RoleAuthority> findRoleAuthorities(Role role) {
+		return this.roleDao.findRoleAuthorities(role);
+	}
+
+	@Transactional(readOnly = true)
+	public List<String> findAuthorities(Role role) {
+		List<String> authorities = new ArrayList<String>();
+		List<RoleAuthority> roleAuthorities = this.roleDao.findRoleAuthorities(role);
+		if (roleAuthorities != null && !roleAuthorities.isEmpty()) {
+			Iterator<RoleAuthority> it = roleAuthorities.iterator();
+			while (it.hasNext()) {
+				RoleAuthority roleAuthority = it.next();
+				authorities.add(roleAuthority.getAuthorities());
+			}
+		}
+		
+		return authorities;
+	}
+
+	@Transactional(readOnly = true)
+	public boolean countRoleAdmins(String id) {
+		if (id == null) {
+			return false;
+		}
+		
+		long num = this.roleDao.countRoleAdmins(id);
+		return num > 0L;
+	}
 	
+	@Transactional
+	//@CacheEvict(value={"authorization"}, allEntries=true)
+	public void remove(String id) {
+		//先刪除RoleAuthority
+		RoleAuthority roleAuthority = new RoleAuthority();
+		roleAuthority.setRoleId(id);
+		this.roleDao.deleteRoleAuthorities(roleAuthority);
+		//再删除角色
+		super.remove(id);
+	}
+	
+	@Transactional
+	//@CacheEvict(value={"authorization"}, allEntries=true)
+	public void remove(String... ids) {
+		if (ids != null) {
+			for (String id : ids) {
+				this.remove(id);
+			}
+		}
+	}
 }

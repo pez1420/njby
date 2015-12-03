@@ -6,6 +6,8 @@ import java.io.Serializable;
  * 认证就是验证用户身份的过程。在认证过程中，用户需要提交实体信息(Principals)和
  * 凭据信息(Credentials)以检验用户是否合法。最常见的“实体/凭证”组合便是“用户名/密码”组合
  * 
+ * 自定义Authentication对象，使得Subject除了携带用户的登录名外还可以携带更多信息.
+ * 
  * @author Administrator
  *
  */

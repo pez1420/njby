@@ -4,7 +4,7 @@ Author: ThemeBucket
 -------------------------------------------*/
 @charset "utf-8";
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic);
+/* @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic); */
 @import url('../../../uilib/bootstrap-3/css/bootstrap.min.css');
 @import url('bootstrap-reset.css');
 @import url('jquery-ui-1.10.3.css');
@@ -12,7 +12,7 @@ Author: ThemeBucket
 
 body {
     background: #424f63;
-    font-family:"Helvetica Neue",Helvetica,STheiti,å¾®è½¯é›…é»‘,å®‹ä½“,Arial,Tahoma,sans-serif,serif;
+    font-family:"Helvetica Neue",Helvetica,STheiti,Î¢ÈíÑÅºÚ,ËÎÌå,Arial,Tahoma,sans-serif,serif;
     color: #7a7676;
     line-height: 20px;
     overflow-x: hidden;
@@ -20,7 +20,7 @@ body {
 }
 
 input, select, textarea {
-    font-family:"Helvetica Neue",Helvetica,STheiti,å¾®è½¯é›…é»‘,å®‹ä½“,Arial,Tahoma,sans-serif,serif;
+    font-family:"Helvetica Neue",Helvetica,STheiti,Î¢ÈíÑÅºÚ,ËÎÌå,Arial,Tahoma,sans-serif,serif;
     color: #767676;
 }
 
@@ -37,7 +37,7 @@ a:focus, a:active, a:hover {
 }
 
 h1, h2, h3, h4, h5 {
-    font-family:"Helvetica Neue",Helvetica,STheiti,å¾®è½¯é›…é»‘,å®‹ä½“,Arial,Tahoma,sans-serif,serif;
+    font-family:"Helvetica Neue",Helvetica,STheiti,Î¢ÈíÑÅºÚ,ËÎÌå,Arial,Tahoma,sans-serif,serif;
 }
 
 .mtop10 {
@@ -135,7 +135,7 @@ hr {
     color: #fff;
     text-transform: uppercase;
     font-weight: normal;
-    font-family:"Helvetica Neue",Helvetica,STheiti,å¾®è½¯é›…é»‘,å®‹ä½“,Arial,Tahoma,sans-serif,serif;
+    font-family:"Helvetica Neue",Helvetica,STheiti,Î¢ÈíÑÅºÚ,ËÎÌå,Arial,Tahoma,sans-serif,serif;
     margin: 20px 0 5px;
     padding: 5px;
     -webkit-transition: all 0.3s;
@@ -556,7 +556,7 @@ h5.left-nav-title {
 
 .toggle-btn {
     width: 52px;
-    height: 50px;
+    height: 60px;
     font-size: 20px;
     padding: 15px;
     cursor: pointer;
@@ -812,7 +812,7 @@ h5.left-nav-title {
 
 .normal-list li .name {
     font-size: 13px;
-    font-family:"Helvetica Neue",Helvetica,STheiti,å¾®è½¯é›…é»‘,å®‹ä½“,Arial,Tahoma,sans-serif,serif;
+    font-family:"Helvetica Neue",Helvetica,STheiti,Î¢ÈíÑÅºÚ,ËÎÌå,Arial,Tahoma,sans-serif,serif;
     line-height: 21px;
 }
 
@@ -863,7 +863,7 @@ h5.left-nav-title {
 }
 
 .sticky-header .main-content {
-    padding-top: 50px;
+    padding-top: 60px;
 }
 
 .sticky-header .menu-right {
@@ -3749,7 +3749,7 @@ ul.activity-list .activity-desk h5 a {
     margin-bottom: 10px;
     text-align: center;
     background: #51d4cc;
-   margin-left: -15px;
+    margin-left: -15px;
     margin-right: -15px;
     margin-top: -15px;
     padding: 56px 20px;
@@ -3779,7 +3779,7 @@ ul.activity-list .activity-desk h5 a {
 }
 
 .clndr-previous-button{
-   position: relative;
+    position: relative;
     top: -30px;
 }
 
@@ -4711,10 +4711,10 @@ ol.comment-list {
 
 
 
-/* è‡ªå®šä¹‰æ¡†æ¶å³ä¾§é¡µé¢ */
+/* ×Ô¶¨Òå¿ò¼ÜÓÒ²àÒ³Ãæ */
 
 .frame-content {
-/*        padding-top: 50px;*/
+    /*        padding-top: 50px;*/
     background: #eff0f4;
     min-height: 1000px;
 }

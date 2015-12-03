@@ -9,8 +9,8 @@
 
     <title>广告位置管理</title>
 
-    <link href="${base}/resource/css/admin/style.css" rel="stylesheet">
-    <link href="${base}/resource/css/admin/style-responsive.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style-responsive.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/scojs.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/sco.message.css" rel="stylesheet">
 

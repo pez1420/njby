@@ -250,7 +250,7 @@
         </div>
     </div>
 
-    <iframe id="iframe" name="iframe" src="overview.jhtml" frameborder="0" scrolling="no"  width="100%" height="1000px">
+    <iframe id="iframe" name="iframe" src="overview.jhtml" frameborder="0" scrolling="no"  width="100%" height="1500px">
     </iframe>
 
 </div>

@@ -9,8 +9,8 @@
 
     <title>日志管理</title>
 
-    <link href="${base}/resource/css/admin/style.css" rel="stylesheet">
-    <link href="${base}/resource/css/admin/style-responsive.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style-responsive.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/scojs.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/sco.message.css" rel="stylesheet">
     
@@ -64,7 +64,7 @@
                                 <i class="fa fa-minus-circle"></i> 删除
                             </a>
                             <a href="#" class="btn btn-xs btn-warning disabled"><i class="fa fa-minus-circle"></i>清空</a>
-                            <a href="adminer_add.html" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> 添加</a>
+                            
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped table-hover table-bordered" id="listTable">
@@ -84,15 +84,17 @@
                                 <tbody>
                                 [#list page.content as log]
 	                                <tr>
-	                                    <td><input type="checkbox" name="ids" value=""></td>
+	                                    <td><input type="checkbox" name="ids" value="${log.id}"></td>
 	                                    <td>${log.operation}</td>
 	                                    <td>${log.operator}</td>
 	                                    <td>${log.ip!"-"}</td>
 	                                    <td>${log.content!"-"}</td>
 	                                    <td>${log.createDate?string("yyyy-MM-dd")}</td>
 	                                    <td>
-	                                        <a href="adminer_edit.html" class="btn btn-info"><i class="fa fa-pencil-square"></i>编辑
-	                                        </a>
+	                                        <a href="#" class="btn btn-info" data-toggle="popover" data-placement="top" 
+	                                        	title="${log.operator}" data-content="${log.operation}">
+												<i class="fa fa-pencil-square"></i>查看
+											</a>
 	                                    </td>
 	                                </tr>
                                 [/#list]
@@ -126,11 +128,11 @@
                         </h4>
                     </div>
                     <div class="modal-body">
-                        	您确定要删除吗?
+                         	您确定要删除吗?
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
-                        <button class="btn btn-warning" data-dismiss="modal" type="button"> 确定</button>
+                    	<button class="btn btn-warning" id="modalDeleteButton" data-dismiss="modal" type="button"> 确定</button>
                     </div>
                 </div>
             </div>
@@ -153,6 +155,7 @@
 
 	$(document).ready(function() {
 		[@flash_message /]
+		$("[data-toggle='popover']").popover({html : true });
 	});
 	
     

@@ -123,7 +123,6 @@
 
         </form>
 
-		[#include "/admin/include/monitor_time.ftl"]
 
         <!-- 删除记录确认模态框（Modal） -->
         <div class="modal fade" id="deleteModal" aria-hidden="true" aria-labelledby="deleteModalLabel" role="dialog"

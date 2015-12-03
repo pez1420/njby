@@ -110,9 +110,7 @@
 
             </div>
         </form>
-		
-		[#include "/admin/include/monitor_time.ftl"]
-		
+
         <!-- 删除记录确认模态框（Modal） -->
         <div class="modal fade" id="deleteModal" aria-hidden="true" aria-labelledby="deleteModalLabel" role="dialog"
              tabindex="-1">
@@ -125,11 +123,11 @@
                         </h4>
                     </div>
                     <div class="modal-body">
-                        		您确定要删除吗?
+                         	您确定要删除吗?
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default" data-dismiss="modal" type="button">关闭</button>
-                        <button class="btn btn-warning" type="button"> 确定</button>
+                    	<button class="btn btn-warning" id="modalDeleteButton" data-dismiss="modal" type="button"> 确定</button>
                     </div>
                 </div>
             </div>

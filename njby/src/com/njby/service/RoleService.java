@@ -3,6 +3,7 @@ package com.njby.service;
 import java.util.List;
 
 import com.njby.entity.Role;
+import com.njby.entity.RoleAuthority;
 import com.njby.entity.search.SearchRole;
 import com.njby.utils.Page;
 import com.njby.utils.Pageable;
@@ -18,5 +19,10 @@ public interface RoleService extends BaseService<Role, String>{
 	
 	public void save(Role role, String... authorities);
 	
-	public  List<Role> findRolesByIds(String[] ids);
+	public List<Role> findRolesByIds(String[] ids);
+	
+	public List<String> findAuthorities(Role role);
+	
+	public boolean countRoleAdmins(String id);
+	
 }

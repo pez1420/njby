@@ -8,11 +8,11 @@
 	http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd"
 	default-lazy-init="true">
 
+	<!-- 注销过滤器 -->
 	<bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter"> 
 		<property name="redirectUrl" value="/admin/login.jsp" /> 
 	</bean> 
 
-    	
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/admin/login.jsp" />
@@ -35,18 +35,86 @@
 		</property>
 	</bean>
 
+
+<!--     <bean id="jedisShiroSessionService" class="com.system.shiro.session.JedisShiroSessionService">
+        <property name="jedisManager" ref="jedisManager"/>
+    </bean>
+    
+    <bean id="customShiroSessionDAO" class="com.system.shiro.session.CustomShiroSessionDAO">
+        <property name="shiroSessionService" ref="jedisShiroSessionService"/>
+    </bean>
+    
+    会话Cookie模板
+    <bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg index="0" value="JSESSIONID_COOKIE"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="-1"/>
+    </bean>
+    
+    会话监听器
+    <bean id="customSessionListener" class="com.system.shiro.listener.CustomSessionListener">
+        <property name="shiroSessionService" ref="jedisShiroSessionService"/>
+    </bean>
+    
+    默认 web session manager, 20分钟自动过期
+    <bean id="defaultWebSessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="${session.timeout}"/>
+        <property name="sessionDAO" ref="customShiroSessionDAO"/>
+        <property name="sessionIdCookie" ref="simpleCookie"/>
+        <property name="sessionListeners">
+            <list>
+                <ref local="customSessionListener"/>
+            </list>
+        </property>
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="deleteInvalidSessions" value="true"/>
+    </bean>
+
+    <bean id="sessionValidationScheduler"
+          class="org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler">
+        <property name="sessionManager" ref="defaultWebSessionManager"/>
+        <property name="interval" value="${session.validate.timespan}"/>
+    </bean>
+
+
+    
+   	<bean id="customShiroCacheManager" class="com.system.shiro.cache.CustomShiroCacheManager">
+        <property name="shiroCacheManager" ref="jedisShiroCacheManager"/>
+    </bean>
+	<bean id="jedisShiroCacheManager" class="com.system.shiro.cache.JedisShiroCacheManager">
+        <property name="jedisManager" ref="jedisManager"/>
+    </bean>
+    <bean id="jedisManager" class="com.system.shiro.JedisManager">
+        <property name="jedisPool" ref="jedisPool"/>
+    </bean> -->
+    
+	<!--  安全管理器,Shiro的核心 -->
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<!-- <property name="sessionManager" ref="defaultWebSessionManager"/> -->
 		<property name="realm" ref="authenticationRealm" />
 		<property name="cacheManager" ref="shiroCacheManager" />
+		<!-- <property name="cacheManager" ref="customShiroCacheManager"/> -->
 	</bean>
 
+	<!-- Shiro从从Realm获取安全数据(如用户、角色、权限)-->
 	<bean id="authenticationRealm" class="com.njby.AuthenticationRealm">
-		<property name="authorizationCacheName" value="authorization" />
+		 <property name="authorizationCacheName" value="authorization" /> 
+		<!-- 	
+				userRealm.credentialsMatcher=$credentialsMatcher  
+				userRealm.cachingEnabled=true  
+				userRealm.authenticationCachingEnabled=true  
+				userRealm.authenticationCacheName=authenticationCache  
+				userRealm.authorizationCachingEnabled=true  
+				userRealm.authorizationCacheName=authorizationCache  
+		-->
 	</bean>
 
-	<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-		<property name="cacheManager" ref="ehCacheManager" />
-	</bean>
+	
+		<bean id="shiroCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+			<property name="cacheManager" ref="ehCacheManager" />
+		</bean> 
+
 
 	<bean id="authenticationFilter" class="com.njby.filter.AuthenticationFilter" />
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+
 //import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Controller;
@@ -47,12 +48,14 @@ public class AdminController extends BaseAdminController {
 			ModelMap model) {
 		model.addAttribute("page", adminService.findPage(pageable, searchAdmin));
 		model.addAttribute("search", searchAdmin);
+		
 		return "/admin/system_set/admin/admin_view";
 	}
 
 	@RequestMapping(value = { "/add" }, method = { RequestMethod.GET })
 	public String add(ModelMap model) {
 		model.addAttribute("roles", this.roleService.findAll());
+		
 		return "/admin/system_set/admin/admin_add";
 	}
 
@@ -71,15 +74,14 @@ public class AdminController extends BaseAdminController {
 		this.adminService.save(admin);
 
 		addFlashAttribute(redirectAttributes, success);
-		// 从一个controller跳转到另一个controller
 		return "redirect:list.jhtml";
 	}
 
 	@RequestMapping(value = { "/edit" }, method = { RequestMethod.GET })
 	public String edit(String id, ModelMap model) {
-		// --------------------------------
 		model.addAttribute("admin", this.adminService.findAdminRoles(id));
 		model.addAttribute("roles", this.roleService.findAll());
+		
 		return "/admin/system_set/admin/admin_edit";
 	}
 
@@ -113,6 +115,16 @@ public class AdminController extends BaseAdminController {
 
 		addFlashAttribute(redirectAttributes, success);
 		return "redirect:list.jhtml";
+	}
+	
+	@RequestMapping(value={"/delete"}, method={RequestMethod.POST})
+	@ResponseBody
+	public Message delete(String[] ids) {
+		if (ids.length >= this.adminService.count())
+			return Message.error("admin.common.deleteAllNotAllowed", new Object[0]);
+		
+		this.adminService.remove(ids);
+		return success;
 	}
 
 }

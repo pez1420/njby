@@ -57,12 +57,13 @@
                         基本信息
                     </div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="inputForm" action="save.jhtml" method="post" role="form">
+                        <form class="form-horizontal" id="inputForm" action="update.jhtml" method="post" role="form">
+                             <input type="hidden" name="id" value="${role.id}" />
                             <div class="form-group">
                                 <label class="col-md-2 col-sm-2 control-label">角色名</label>
 
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="name" type="text" placeholder="角色名称">
+                                    <input class="form-control" name="name" value="${role.name}" type="text" placeholder="角色名称">
                                 </div>
                             </div>
 
@@ -70,7 +71,7 @@
                                 <label class="col-md-2 col-sm-2 control-label">描述</label>
 
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="description" type="text" placeholder="角色描述">
+                                    <input class="form-control" name="description" value="${role.description}" type="text" placeholder="角色描述">
                                 </div>
                             </div>
 
@@ -145,7 +146,7 @@
 
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <a class="btn btn-danger" type="button" href="role_view.html">返回</a>
+                                    <a class="btn btn-danger" type="button" href="list.jhtml">返回</a>
                                     <button type="submit" class="btn btn-primary">确定</button>
                                 </div>
                             </div>

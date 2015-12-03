@@ -25,7 +25,7 @@ public final class ImageUtils {
      * @param height 高度
      * @param width  宽度
      */
-    public static boolean resize(String org,String dest, int height, int width) {
+    public static boolean resize(String org, String dest, int height, int width) {
     	    boolean bol = false; //是否进行了压缩
     	    //LogRecord.recode(ImageUtils.class, "resize", org);
     		String pictype="";

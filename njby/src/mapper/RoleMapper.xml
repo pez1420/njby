@@ -98,6 +98,7 @@
             	name like  "%"#{search.name}"%"
        	 	</if>  
 		</trim>
+		order by modify_date desc
 	</select>
 
 
@@ -124,6 +125,17 @@
 	         </if>  
 		</trim> 
     </select>   	
+
+    <!-- 根据role表中的id或name查询角色信息和角色内用户信息 -->  
+    <select id="countRoleAdmins" parameterType="java.lang.String"  
+        resultType="long">  
+        select
+        	count(A.id)
+        	from role B left  
+        		join admin_role AR on B.id=AR.role_id 
+        		left join admin A on AR.admin_id= A.id  
+        	where B.id = #{id,jdbcType=VARCHAR}
+    </select>   
 
 
      <select id="findRoleAuthorities" resultMap="RoleAuthorityMap" 
@@ -162,6 +174,7 @@
 		
     </delete>
 
+    
      <select id="findRolesByIds" resultMap="RoleMap">
 	     select * 
 	     from <include refid="Table_Name" />

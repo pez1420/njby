@@ -9,15 +9,15 @@
 
     <title>导航管理</title>
 
-    <link href="${base}/resource/css/admin/style.css" rel="stylesheet">
-    <link href="${base}/resource/css/admin/style-responsive.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style-responsive.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/scojs.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/sco.message.css" rel="stylesheet">
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-    <script src="${base}/resource/html5shiv.js"></script>
-    <script src="${base}/resource/respond.min.js"></script>
+    <script src="${base}/resources/html5shiv.js"></script>
+    <script src="${base}/resources/respond.min.js"></script>
     <![endif]-->
 </head>
 <body>
@@ -45,6 +45,7 @@
                                    name="name" value="${search.name}"
                                    style="width: 150px; display: inline-block; margin-right: 30px;">
                         </label>
+                        <!--
                         <label>
                             <span style="margin-right: 15px;">位置</span>
                             <select class="form-control input-sm" style="width: 150px; display: inline-block; " name="position">
@@ -53,7 +54,7 @@
                                 <option value="1" [#if search.position == 1] selected="true"[/#if]>中间</option>
                                 <option value="2" [#if search.position == 2] selected="true"[/#if]>底部</option>
                             </select>
-                        </label>
+                        </label>-->
                         <button type="submit" class="btn-sm btn btn-info" style="margin-left: 30px;"><i
                                 class="fa fa-search"></i>
                            		 查询

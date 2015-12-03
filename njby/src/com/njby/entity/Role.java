@@ -21,7 +21,9 @@ public class Role extends BaseEntity{
 	
 	@Meaning("管理员")
     List<Admin> admins = new ArrayList<Admin>();
-    
+	@Meaning("角色权限")
+	List<RoleAuthorities> roleAuthorities = new ArrayList<RoleAuthorities>();
+	
     public String getDescription() {
         return description;
     }
@@ -53,6 +55,15 @@ public class Role extends BaseEntity{
 
 	public void setAdmins(List<Admin> admins) {
 		this.admins = admins;
+	}
+
+	
+	public List<RoleAuthorities> getRoleAuthorities() {
+		return roleAuthorities;
+	}
+
+	public void setRoleAuthorities(List<RoleAuthorities> roleAuthorities) {
+		this.roleAuthorities = roleAuthorities;
 	}
 
 	public String toString(){

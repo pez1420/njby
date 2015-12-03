@@ -1,13 +1,18 @@
 package com.njby.entity;
 
+//import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.Transient;
+
 import org.springframework.web.multipart.MultipartFile;
 
-public class ProductImage extends OrderEntity{
+import com.system.ananotation.EntityInfo;
+
+@EntityInfo("产品图片")
+public class ProductImage extends BaseEntity{
 	
-	private static final long serialVersionUID = 2746536868988238516L;
-	
-	private Integer orders;
-	
+	private static final long serialVersionUID = 4400299567664515629L;
+
 	private String title;
 	
 	private String source;
@@ -18,14 +23,6 @@ public class ProductImage extends OrderEntity{
 	
 	private MultipartFile file;
 
-	
-	public Integer getOrders() {
-		return orders;
-	}
-
-	public void setOrders(Integer orders) {
-		this.orders = orders;
-	}
 
 	public String getTitle() {
 		return title;
@@ -59,6 +56,7 @@ public class ProductImage extends OrderEntity{
 		this.product = product;
 	}
 
+	@Transient
 	public MultipartFile getFile() {
 		return file;
 	}
@@ -66,8 +64,13 @@ public class ProductImage extends OrderEntity{
 	public void setFile(MultipartFile file) {
 		this.file = file;
 	}
-	
-	
-	
 
+	 @Transient
+	 public boolean isEmpty() {
+		 if (true) {
+			  
+		  }
+		 
+		 return true;
+	 }
 }

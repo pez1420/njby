@@ -78,9 +78,21 @@
 	      )		
 	</insert> 	
 	
-	<select id="removeAll">
-		delete from <include refid="Table_Name" />
+	<select id="count" resultType="long">
+		select count(*)
+		from
+		<include refid="Table_Name" />
 	</select>
+	
+	<delete id="remove" parameterType="java.lang.String">
+		delete from
+		<include refid="Table_Name" />
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	
+	<delete id="removeAll">
+		delete from <include refid="Table_Name" />
+	</delete>
 	
 	
 </mapper>

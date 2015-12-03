@@ -14,7 +14,20 @@
 	    <result property="url" column="url" jdbcType="VARCHAR" />
     	<result property="isBlankTarget" column="is_blank_target"  jdbcType="BIT" />
 	</resultMap>
-	
+
+	<select id="count" resultType="long">
+		select count(*)
+		from
+		<include refid="Table_Name" />
+	</select>
+		
+	<select id="find" resultMap="BaseNavigationMap" parameterType="java.lang.String" >
+	    select 
+	    	*
+	    from <include refid="Table_Name" />
+	    where id = #{id,jdbcType=VARCHAR}
+  	</select>
+  	
 	<insert id="save" parameterType="Navigation">
 		<selectKey keyProperty="id" resultType="String" order="BEFORE">
 			select replace(uuid(),'-','')
@@ -32,7 +45,7 @@
 	
 	<update id="update" parameterType="Navigation">
 	    update <include refid="Table_Name" />
-    	set modify_date = #{modifyDate,jdbcType=TIMESTAMP},
+    	set modify_date = now(),
       		orders 		= #{orders,jdbcType=INTEGER},
       		name 		= #{name,jdbcType=VARCHAR},
       		position	= #{position,jdbcType=INTEGER},
@@ -53,11 +66,11 @@
 		from <include refid="Table_Name" />
 		<trim prefix="where" prefixOverrides="and|or">
 			<!-- 非空ognl有相应方法 -->
-			<if test="search.name != null and search.name != ''">  
+			<if test="search != null and search.name != null and search.name != ''">  
             	name like  "%"#{search.name}"%"
        	 	</if> 
        	 	
-       	 	<if test="search.position != null">  
+       	 	<if test="search != null and search.position != null and search.position != ''">  
             	and position = #{search.position}
        	 	</if>  
        	 	

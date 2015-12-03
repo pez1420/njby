@@ -28,6 +28,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product, String>
 		super.setBaseDao(productDao);
 	}
 
+	@Transactional
+	public void save(Product entity) {
+		//先保存图片productImage
+		//再保存product
+		this.productDao.save(entity);
+	}
+	
 	@Transactional(readOnly=true)
 	public Page<Product> findPage(Pageable pageable, SearchProduct searchProduct) {
 		//分页并计算出总页数 

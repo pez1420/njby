@@ -62,5 +62,14 @@ public interface RoleDao extends BaseDao<Role, String>{
 	 * @return 返回角色列表
 	 */
 	public  List<Role> findRolesByIds(String[] ids); //@Param(value = "roleIds")
+	
+	
+	/**
+	 * 返回角色对应管理员的数量
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public long countRoleAdmins(String id);
 }
 

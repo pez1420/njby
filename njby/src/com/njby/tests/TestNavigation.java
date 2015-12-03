@@ -67,4 +67,15 @@ public class TestNavigation {
 		
 		navigationService.save(nav);
 	}
+	
+	@Test
+	public void update() {
+		Navigation navigation = new Navigation();
+		navigation.setId("d13fb96a7ada11e59d0f74e5432100f2");
+		navigation.setIsBlankTarget(Boolean.valueOf(true));
+		navigation.setName("测试一");
+		navigation.setPosition(2);
+		navigation.setUrl("#");
+		this.navigationService.update(navigation);
+	}
 }

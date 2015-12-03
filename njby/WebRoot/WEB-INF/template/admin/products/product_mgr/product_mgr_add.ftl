@@ -13,8 +13,9 @@
     <link href="${base}/resource/css/admin/style-responsive.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/scojs.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/sco.message.css" rel="stylesheet">
-    <link href="${base}/uilib/bootstrap-fileupload/css/bootstrap-fileupload.min.css" rel="stylesheet">
-        
+    <!--<link href="${base}/uilib/bootstrap-fileupload/css/bootstrap-fileupload.min.css" rel="stylesheet">-->
+    <link href="${base}/uilib/fileinput/css/fileinput.min.css" rel="stylesheet" type="text/css"/>
+    	
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="${base}/resource/html5shiv.js"></script>
@@ -158,44 +159,28 @@
                                 </div>
                             </div>
 
-							<!--
-                            <div class="form-group ">
-                                <label class="col-md-2 col-sm-2 control-label">产品图片</label>
-                                <div class="col-md-6 col-sm-6">
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="fileupload-new thumbnail" style="width: 200px; height: 150px;">
-                                            <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                                        </div>
-                                        <div class="fileupload-preview fileupload-exists thumbnail" style="max-width: 200px; max-height: 150px; line-height: 20px;"></div>
-                                        <div>
-                                                   <span class="btn btn-default btn-file">
-                                                   <span class="fileupload-new"><i class="fa fa-paper-clip"></i>选择图片</span>
-                                                   <span class="fileupload-exists"><i class="fa fa-undo"></i>修改</span>
-                                                   <input class="default" id="imageFile" name="imageFile" type="file"  />
-                                                   </span>
-                                            <a href="#" class="btn btn-danger fileupload-exists" data-dismiss="fileupload"><i class="fa fa-trash"></i>移除</a>
-                                        </div>
-                                    </div>
+			
 
-                                </div>
-                            </div>
-							-->
-                            <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">产品缩略图</label>
-
-                                <div class="col-md-6 col-sm-6">
-                                    <input id="imageFile" name="imageFile" type="file" multiple class="file" >
-                                </div>
-                            </div>
 							<!-- 
-                            <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">产品大图</label>
+	                            <div class="form-group">
+	                                <label class="col-md-2 col-sm-2 control-label">产品缩略图</label>
+	
+	                                <div class="col-md-6 col-sm-6">
+	                                    <input id="imageFile" name="imageFile" type="file" multiple class="file" >
+	                                </div>
+	                            </div>
+                            -->
 
-                                <div class="col-md-6 col-sm-6">
-                                    <input id="myfiles-2" name="myfiles" type="file" multiple class="file">
+                            <div class="form-group">
+                                <label class="col-md-2 col-sm-2 control-label">产品图片</label>
+
+                                <div class="col-md-10 col-sm-10">
+                                    <input id="file-1" name="files" type="file"  class="file" multiple="true" data-min-file-count="2"
+                                           data-show-upload="false" data-allowed-file-extensions='["jpg", "png", "gif"]' data-upload-url="#">
+                                    <br>
+
                                 </div>
                             </div>
-                            -->
 
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
@@ -225,7 +210,9 @@
 <script src="${base}/resources/jquery.validate.min.js"></script>
 <script src="${base}/resources/bootbox.min.js"></script>
 <script src="${base}/uilib/sco-master/js/sco.message.js"></script>
-<script src="${base}/uilib/bootstrap-fileupload/js/bootstrap-fileupload.min.js"></script>
+<!--<script src="${base}/uilib/bootstrap-fileupload/js/bootstrap-fileupload.min.js"></script>-->
+<script src="${base}/uilib/fileinput/js/fileinput.min.js"></script>
+<script src="${base}/uilib/fileinput/js/fileinput_locale_zh.js"></script>
 
 <script>
 
@@ -233,6 +220,21 @@
 		[@flash_message /]
 	});
 	
+	$(document).on('ready', function() {
+
+        $("#file-1").fileinput({
+            language: 'zh', //设置语言
+            //uploadUrl: 'www.baidu.com', //上传的地址
+            allowedFileExtensions : ['jpg', 'png','gif'],//接收的文件后缀
+            showUpload: false, //是否显示上传按钮
+            //showCaption: false,//是否显示标题
+            browseClass: "btn btn-primary", //按钮样式
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+            //elErrorContainer: '#errorBlock'
+            maxFileCount:5
+        });
+    });
+    
     $(function(){
             var $inputForm = $("#inputForm");
             $inputForm.validate({

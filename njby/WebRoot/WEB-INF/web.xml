@@ -13,9 +13,15 @@
         <param-value>
         		classpath*:/applicationContext.xml
         		classpath*:/applicationContext-mybatis.xml
+        		classpath*:/applicationContext-redis.xml
         		classpath*:/applicationContext-shiro.xml
         </param-value>
     </context-param>
+   	
+   	<filter>
+   		<filter-name>kyoSessionFilter</filter-name>
+   		<filter-class>com.ruijie.framework.kyo.filter.KyoSessionFilter</filter-class>
+   	</filter>
    	
    	<filter>
 		<filter-name>encodingFilter</filter-name>
@@ -43,7 +49,21 @@
 		</init-param>
 	</filter>
 
-
+ 	<filter-mapping>
+		<filter-name>kyoSessionFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+	</filter-mapping>
+	
+	 <filter-mapping>
+		<filter-name>kyoSessionFilter</filter-name>
+		<url-pattern>*.jhtml</url-pattern>
+	</filter-mapping>
+	
+	 <filter-mapping>
+		<filter-name>kyoSessionFilter</filter-name>
+		<url-pattern>*.ftl</url-pattern>
+	</filter-mapping>
+		
 	<filter>
 		<filter-name>shiroFilter</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -58,7 +78,9 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>*.jhtml</url-pattern>
 	</filter-mapping>
- 	
+ 
+
+		
 <!-- 	<filter-mapping>
 		<filter-name>encodingConvertFilter</filter-name>
 		<url-pattern>*.jhtml</url-pattern>

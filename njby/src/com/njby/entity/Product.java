@@ -1,6 +1,9 @@
 package com.njby.entity;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +32,11 @@ public class Product extends BaseEntity{
 	
 	private ProductType productType; //产品类型
 	
+	private List<ProductImage> productImages = new ArrayList<ProductImage>();
+	
 	private MultipartFile imageFile;
 	
+	private MultipartFile[] files;
 	
 	public String getSn() {
 		return sn;
@@ -121,7 +127,6 @@ public class Product extends BaseEntity{
 	}
 
 	
-	
 	public String getImage() {
 		return image;
 	}
@@ -138,6 +143,17 @@ public class Product extends BaseEntity{
 		this.productType = productType;
 	}
 
+
+
+	public List<ProductImage> getProductImages() {
+		return productImages;
+	}
+
+	public void setProductImages(List<ProductImage> productImages) {
+		this.productImages = productImages;
+	}
+
+	@Transient
 	public MultipartFile getImageFile() {
 		return imageFile;
 	}
@@ -145,7 +161,15 @@ public class Product extends BaseEntity{
 	public void setImageFile(MultipartFile imageFile) {
 		this.imageFile = imageFile;
 	}
+	
+	
+	public MultipartFile[] getFiles() {
+		return files;
+	}
 
+	public void setFiles(MultipartFile[] files) {
+		this.files = files;
+	}
 
 	@Transient
 	public String getPath() {

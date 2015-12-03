@@ -152,7 +152,7 @@ if (applicationContext != null) {
 	        <input type="hidden" id="enPassword" name="enPassword" />
 	        <input type="hidden" name="captchaId" value="<%=captchaId%>" />
 	        <div class="form-signin-heading text-center">
-	            <h1 class="sign-title"><i class="fa fa-sun-o"></i>乾冠Waf监控管理平台</h1>
+	            <h1 class="sign-title"><i class="fa fa-sun-o"></i>南京碧源文化礼品经营部管理平台</h1>
 	            <img src="<%=base%>/resources/images/admin/login/login-logo.png" alt=""/>
 	        </div>
 	

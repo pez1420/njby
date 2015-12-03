@@ -3,9 +3,14 @@ package com.njby.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.groups.Default;
+
 public class BaseEntity implements Serializable {
 	private static final long serialVersionUID = -4408527936946073327L;
 
+	public abstract interface Save extends Default {}
+	public abstract interface Update extends Default {}	
+	
 	private String id;
 	private Date createDate;
 	private Date modifyDate;
@@ -43,11 +48,12 @@ public class BaseEntity implements Serializable {
 			return true;
 		}
 		
+		//判断BaseEntity是否是obj的父类
 		if (!BaseEntity.class.isAssignableFrom(obj.getClass())) {
 			return false;
 		}
-		BaseEntity localBaseEntity = (BaseEntity) obj;
-		return getId() != null ? getId().equals(localBaseEntity.getId())
+		BaseEntity e = (BaseEntity) obj;
+		return getId() != null ? getId().equals(e.getId())
 				: false;
 	}
 	

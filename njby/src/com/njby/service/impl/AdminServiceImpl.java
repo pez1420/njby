@@ -38,7 +38,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, String> implements
 	}
 
 	@Transactional
-	@CacheEvict(value={"authorization"}, allEntries=true)
+	//@CacheEvict(value={"authorization"}, allEntries=true)
 	public void save(Admin admin) {
 		super.save(admin);
 		List<Role> roles = admin.getRoles();
@@ -53,7 +53,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, String> implements
 	}
 
 	@Transactional
-	@CacheEvict(value={"authorization"}, allEntries=true)
+	//@CacheEvict(value={"authorization"}, allEntries=true)
 	public void remove(String id) {
 		Admin admin = new Admin();
 		admin.setId(id);
@@ -66,9 +66,13 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, String> implements
 	}
 
 	@Transactional
-	@CacheEvict(value={"authorization"}, allEntries=true)
+	//@CacheEvict(value={"authorization"}, allEntries=true)
 	public void remove(String... ids) {
-		super.remove(ids);
+		if (ids != null) {
+			for (String id : ids) {
+				this.remove(id);
+			}
+		}
 	}
 
 	@Transactional(readOnly = true)
@@ -91,7 +95,7 @@ public class AdminServiceImpl extends BaseServiceImpl<Admin, String> implements
 
 	@SuppressWarnings("unchecked")
 	@Transactional
-	@CacheEvict(value={"authorization"}, allEntries=true)
+	//@CacheEvict(value={"authorization"}, allEntries=true)
 	public void updateWithRole(Admin admin) {
 		/***
 		 * 

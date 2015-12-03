@@ -9,8 +9,8 @@
 
     <title>通告管理</title>
 
-    <link href="${base}/resource/css/admin/style.css" rel="stylesheet">
-    <link href="${base}/resource/css/admin/style-responsive.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style.css" rel="stylesheet">
+    <link href="${base}/resources/css/admin/style-responsive.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/scojs.css" rel="stylesheet">
     <link href="${base}/uilib/sco-master/css/sco.message.css" rel="stylesheet">
     
@@ -64,7 +64,7 @@
                                data-target="#deleteModal" style="margin-left: 30px;">
                                 <i class="fa fa-minus-circle"></i> 删除
                             </a>
-                            <a href="adminer_add.html" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> 添加</a>
+                            <a href="add.jhtml" class="btn btn-xs btn-info"><i class="fa fa-plus-circle"></i> 添加</a>
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped table-hover table-bordered" id="listTable">
@@ -93,10 +93,9 @@
 	                                    </td>
 	                                    <td>${notice.createDate?string("yyyy-MM-dd")}</td>
 	                                    <td>
-	                                        <a href="adminer_edit.html" class="btn btn-search"><i class="fa fa-search"></i>查看
+	                                        <a href="#" class="btn btn-search"><i class="fa fa-search"></i>查看
 	                                        </a>
-	                                        <a href="adminer_edit.html" class="btn btn-info"><i class="fa fa-pencil-square"></i>编辑
-	                                        </a>
+											<a href="edit.jhtml?id=${notice.id}" class="btn btn-info"><i class="fa fa-pencil-square"></i>编辑
 	                                    </td>
 	                                </tr>
                                 [/#list]
@@ -143,21 +142,23 @@
 </div>
 
 <!-- Placed js at the end of the document so the pages load faster -->
-<script src="${base}/resource/jquery-2.1.0.min.js"></script>
-<script src="${base}/resource/jquery-ui-1.9.2.custom.min.js"></script>
-<script src="${base}/resource/jquery-migrate-1.2.1.min.js"></script>
+<script src="${base}/resources/jquery-2.1.0.min.js"></script>
+<script src="${base}/resources/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="${base}/resources/jquery-migrate-1.2.1.min.js"></script>
 <script src="${base}/uilib/bootstrap-3/js/bootstrap.min.js"></script>
 <script src="${base}/uilib/sco-master/js/sco.message.js"></script>
-<script src="${base}/resource/modernizr.min.js"></script>
-<script src="${base}/resource/require/require.js"></script>
+<script src="${base}/resources/modernizr.min.js"></script>
+
+<script src="${base}/resources/admin/list.js"></script>
+<script src="${base}/uilib/sco-master/js/sco.message.js"></script>
+
 <script>
-	$(function() {
+
+	$(document).ready(function() {
 		[@flash_message /]
 	});
 	
-    require(["${base}/resource/js/admin/main.js"], function (main) {
-        main.notice_viewer_page();
-    });
+    
 </script>
 
 </body>

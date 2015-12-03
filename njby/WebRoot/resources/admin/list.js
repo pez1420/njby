@@ -21,6 +21,7 @@ $(document).ready( function() {
     $modalDeleteButton.click(function () {
         var $this = $(this);
         var $checkedIds = $("#listTable input[name='ids']:enabled:checked");
+        console.log($checkedIds.serialize());
         $.ajax({
             url: "delete.jhtml",
             type: "POST",

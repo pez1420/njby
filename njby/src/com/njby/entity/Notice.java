@@ -1,5 +1,9 @@
 package com.njby.entity;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.system.ananotation.EntityInfo;
 import com.system.ananotation.Meaning;
 
@@ -25,6 +29,7 @@ public class Notice extends BaseEntity{
 	@Meaning("点击数")
 	private Integer hits;
 
+	@NotNull(message = "title may be null!")
 	public String getTitle() {
 		return title;
 	}
@@ -41,6 +46,7 @@ public class Notice extends BaseEntity{
 		this.author = author;
 	}
 
+	@NotNull(message = "content may be null!")
 	public String getContent() {
 		return content;
 	}

@@ -6,7 +6,6 @@
     <title>南京秦淮区碧源礼品文化经营部|联系我们</title>
     <link href="${base}/uilib/bootstrap-3/css/bootstrap.css" rel='stylesheet' type='text/css'/>
     <link href="${base}/uilib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
     <link href="${base}/resources/css/style.css" rel="stylesheet" type="text/css" media="all"/>
     <style type="text/css">
         html, body {

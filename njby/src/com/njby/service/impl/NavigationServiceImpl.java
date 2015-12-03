@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.njby.dao.NavigationDao;
 import com.njby.entity.Navigation;
-import com.njby.entity.Navigation;
 import com.njby.entity.search.SearchNavigation;
 import com.njby.service.NavigationService;
 import com.njby.utils.Page;
