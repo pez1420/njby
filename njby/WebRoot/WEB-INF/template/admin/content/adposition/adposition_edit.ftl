@@ -7,7 +7,7 @@
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
 
-    <title>导航新增</title>
+    <title>广告位置编辑</title>
 
     <link href="${base}/resources/css/admin/style.css" rel="stylesheet">
     <link href="${base}/resources/css/admin/style-responsive.css" rel="stylesheet">
@@ -30,7 +30,7 @@
             <div class="col-md-12">
                 <ul class="breadcrumb">
                     <li><a href="../../../common/overview.jhtml"><i class="fa fa-home"></i> 首页</a></li>
-                    <li>添加导航</li>
+                    <li>编辑广告位置</li>
                 </ul>
             </div>
         </div>
@@ -44,78 +44,45 @@
                        	 基本信息
                     </div>
                     <div class="panel-body">
-                        <form class="form-horizontal" id="inputForm" action="save.jhtml" method="post" role="form">
+                        <form class="form-horizontal" id="inputForm" action="update.jhtml" method="post" role="form">
+                            <input type="hidden" name="id" value="${adPosition.id}" />
                             <div class="form-group">
                                 <label class="col-md-2 col-sm-2 control-label">名称</label>
 
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="name" type="text" placeholder="名称">
+                                    <input class="form-control" name="name" value="${adPosition.name}" type="text" placeholder="名称">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">系统内容</label>
-
+                                <label class="col-md-2 col-sm-2 control-label">宽度</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control input-sm" id="systemUrl">
-                                        <option value="">#</option>
-                                        <option value="${base}/index.html">首页</option>
-                                        <option value="${base}/aboutus.html">关于我们</option>
-                                        <option value="${base}/contactus.html">联系我们</option>
-                                        <option value="${base}/equipment/list.jhtml">设备管理</option>
-                                    
-                                        [#list productTypeTree as productType]
-											<option value="${base}${productType.path}">
-												[#if productType.grade != 0]
-													[#list 1..productType.grade as i]
-														&nbsp;&nbsp;
-													[/#list]
-												[/#if]
-												${productType.name}
-											</option>
-										[/#list]
-										
-                                    </select>
+									<input class="form-control" name="width" value="${adPosition.width}" type="text" placeholder="宽度">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">链接地址</label>
-
+                                <label class="col-md-2 col-sm-2 control-label">高度</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="url" id="url" type="text" placeholder="链接地址">
+                                    <input class="form-control" name="height" value="${adPosition.height}" type="text" placeholder="高度">
                                 </div>
                             </div>
-
-
+                            
                             <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">位置</label>
-
+                                <label class="col-md-2 col-sm-2 control-label">描述</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <select class="form-control input-sm" name="position">
-                                        <option value="0">顶部</option>
-                                        <option value="1">中间</option>
-                                        <option value="2">底部</option>
-                                    </select>
+									<input class="form-control" name="description" value="${adPosition.description}" type="text" placeholder="描述">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">设置</label>
+                                <label class="col-md-2 col-sm-2 control-label">模板</label>
                                 <div class="col-md-6 col-sm-6">
-                                    <input type="checkbox" name="isBlankTarget" value="true"> 是否新窗口打开
-                                    <input type="hidden" name="_isBlankTarget" value="false"/>
+									 <textarea name="template" style="width: 100%; height: 100px; padding: 0px;">${adPosition.template}
+									 </textarea>
                                 </div>
                             </div>
 
-
-                            <div class="form-group">
-                                <label class="col-md-2 col-sm-2 control-label">排序</label>
-
-                                <div class="col-md-6 col-sm-6">
-                                    <input class="form-control" name="orders" type="text" placeholder="排序">
-                                </div>
-                            </div>
 
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
@@ -148,27 +115,19 @@
 <script>
     $(document).ready(function () {
         var $inputForm = $("#inputForm");
-        var $systemUrl = $("#systemUrl");
-        var $url = $("#url");
-
-        // 将选择的系统内容地址填充至链接地址中
-        $systemUrl.change(function() {
-            $url.val($systemUrl.val());
-        });
-
-        // 链接地址内容修改时,系统内容选择框修改为不选择任何项目
-        $url.keypress(function() {
-            $systemUrl.val("");
-        });
 
         $inputForm.validate({
             rules: {
                 name: "required",
-                url: "required",
-                orders: {
+                width: {
                 	required: true,
                 	digit: true
-                }
+                },
+                height: {
+                	required: true,
+                	digit: true
+                },
+                template: "required"
             },
             submitHandler: function (form) {
                 //跳出验证对话框

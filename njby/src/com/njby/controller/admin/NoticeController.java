@@ -62,7 +62,6 @@ public class NoticeController extends BaseAdminController {
 	@RequestMapping(value = { "/update" }, method = { RequestMethod.POST })
 	public String update(@Valid Notice notice, BindingResult result,
 			RedirectAttributes redirectAttributes, ModelMap model) {
-		
 		if (result.hasErrors()) {
 			return "/admin/error";
 		}

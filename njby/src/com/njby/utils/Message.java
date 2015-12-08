@@ -1,7 +1,11 @@
 package com.njby.utils;
 
+import java.io.Serializable;
 
-public class Message {
+public class Message implements Serializable{
+	
+	private static final long serialVersionUID = -2043602889119735919L;
+
 	public enum Type {
 		success, warn, error
 	}

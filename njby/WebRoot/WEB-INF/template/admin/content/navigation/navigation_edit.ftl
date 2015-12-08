@@ -168,6 +168,7 @@
                 orders: {
                 	required : true,
                 	digits : true
+                }
             },
             submitHandler: function (form) {
                 //跳出验证对话框

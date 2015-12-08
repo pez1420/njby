@@ -27,7 +27,12 @@
 	    from <include refid="Table_Name" />
 	    where id = #{id,jdbcType=VARCHAR}
   	</select>
-  	
+
+	<delete id="remove" parameterType="java.lang.String" >
+	    delete from <include refid="Table_Name" />
+	    where id = #{id,jdbcType=VARCHAR}
+	</delete>  	
+	 	
 	<insert id="save" parameterType="Navigation">
 		<selectKey keyProperty="id" resultType="String" order="BEFORE">
 			select replace(uuid(),'-','')
